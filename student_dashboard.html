@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Stationery Store System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">Stationery Store</div>
+            <nav class="sidebar-menu">
+                <div class="menu-item active" data-section="overview">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </div>
+                <div class="menu-item" data-section="stationery">
+                    <i class="fas fa-book"></i> <span>View Stationery</span>
+                </div>
+                <div class="menu-item" data-section="purchase">
+                    <i class="fas fa-shopping-cart"></i> <span>Purchase Items</span>
+                </div>
+                <div class="menu-item" data-section="print">
+                    <i class="fas fa-print"></i> <span>Request Print / Xerox</span>
+                </div>
+                <div class="menu-item" data-section="orders">
+                    <i class="fas fa-box"></i> <span>Order Status</span>
+                </div>
+                <a href="index.html" class="menu-item logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="dashboard-header">
+                <h2 id="section-title">Student Dashboard</h2>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search stationery products...">
+                </div>
+                <div class="header-actions">
+                    <div class="icon-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="icon-btn">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <div class="profile-img">JD</div>
+                </div>
+            </header>
+
+            <div class="dashboard-body">
+                
+                <!-- Overview Section -->
+                <section id="overview" class="section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(37, 99, 235, 0.1); color: var(--primary-color);">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span>Total Products</span>
+                                <h3>124</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                                <i class="fas fa-shopping-basket"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span>Items in Cart</span>
+                                <h3>5</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span>Active Orders</span>
+                                <h3>2</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span>Discount Offers</span>
+                                <h3>12</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title" style="text-align: left; margin-bottom: 1.5rem;">
+                        <h2>Quick Actions</h2>
+                    </div>
+                    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        <div class="card" style="padding: 1.5rem; text-align: center; cursor: pointer;">
+                            <i class="fas fa-plus"></i>
+                            <h4>New Print Job</h4>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; text-align: center; cursor: pointer;">
+                            <i class="fas fa-history"></i>
+                            <h4>View History</h4>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View Stationery Section -->
+                <section id="stationery" class="section">
+                    <div class="product-grid" id="product-list">
+                        <!-- Products will be injected here by JS or hardcoded -->
+                        <div class="product-card">
+                            <div class="product-img"><img src="products.png" alt="Notebook"></div>
+                            <span class="discount-tag">10% OFF</span>
+                            <div class="product-details">
+                                <div class="product-name">Premium Spiral Notebook (A4)</div>
+                                <div class="product-price">₹150</div>
+                                <div class="product-stock">Stock: 45 available</div>
+                                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img"><img src="products.png" alt="Pen"></div>
+                            <div class="product-details">
+                                <div class="product-name">Set of 5 Gel Pens</div>
+                                <div class="product-price">₹50</div>
+                                <div class="product-stock">Stock: 120 available</div>
+                                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img"><img src="products.png" alt="Geometry Box"></div>
+                            <span class="discount-tag">5% OFF</span>
+                            <div class="product-details">
+                                <div class="product-name">Mathematic Geometry Box</div>
+                                <div class="product-price">₹120</div>
+                                <div class="product-stock">Stock: 15 available</div>
+                                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-img"><img src="products.png" alt="Sticky Notes"></div>
+                            <div class="product-details">
+                                <div class="product-name">Colorful Sticky Notes</div>
+                                <div class="product-price">₹40</div>
+                                <div class="product-stock">Stock: 60 available</div>
+                                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Purchase Items (Cart) Section -->
+                <section id="purchase" class="section">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Premium Spiral Notebook</td>
+                                    <td>₹150</td>
+                                    <td>2</td>
+                                    <td>₹300</td>
+                                    <td><button class="btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>Set of 5 Gel Pens</td>
+                                    <td>₹50</td>
+                                    <td>1</td>
+                                    <td>₹50</td>
+                                    <td><button class="btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 2rem; text-align: right;">
+                        <span style="font-size: 1.25rem; font-weight: 700; margin-right: 2rem;">Total: ₹350</span>
+                        <button class="btn btn-primary">Proceed to Checkout</button>
+                    </div>
+                </section>
+
+                <!-- Request Print Section -->
+                <section id="print" class="section">
+                    <div class="contact-form" style="max-width: 600px; margin: 0 auto; box-shadow: none; border: 1px solid var(--border-color);">
+                        <div class="form-group">
+                            <label>Document Name</label>
+                            <input type="text" placeholder="e.g. Project Report Final">
+                        </div>
+                        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Number of Pages</label>
+                                <input type="number" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Print Type</label>
+                                <select>
+                                    <option>Black & White</option>
+                                    <option>Color</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Number of Copies</label>
+                                <input type="number" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Upload File</label>
+                                <input type="file" style="padding: 0.5rem;">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Submit Print Request</button>
+                    </div>
+                </section>
+
+                <!-- Order Status Section -->
+                <section id="orders" class="section">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Order Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-8921</td>
+                                    <td>Spiral Notebook, Pens</td>
+                                    <td>3 items</td>
+                                    <td>2026-03-14</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-8812</td>
+                                    <td>A4 Xerox (50 pages)</td>
+                                    <td>1 job</td>
+                                    <td>2026-03-12</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-8750</td>
+                                    <td>Geometry Box</td>
+                                    <td>1</td>
+                                    <td>2026-03-10</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+
+            <footer style="margin-top: auto; padding: 2rem; background: transparent; color: var(--text-muted); text-align: center; border-top: 1px solid var(--border-color);">
+                <p>&copy; 2026 College Stationery Store Management System</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
