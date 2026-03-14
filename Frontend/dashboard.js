@@ -50,14 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
             const products = document.querySelectorAll('.product-card');
+            const tableRows = document.querySelectorAll('tbody tr');
             
+            // Filter products cards
             products.forEach(product => {
                 const name = product.querySelector('.product-name').innerText.toLowerCase();
-                if (name.includes(query)) {
-                    product.style.display = 'block';
-                } else {
-                    product.style.display = 'none';
-                }
+                product.style.display = name.includes(query) ? 'block' : 'none';
+            });
+
+            // Filter table rows
+            tableRows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
             });
         });
     }

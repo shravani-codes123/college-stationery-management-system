@@ -311,6 +311,13 @@ td {
 
 .status-pending { background: #fef3c7; color: #92400e; }
 .status-completed { background: #dcfce7; color: #166534; }
+.status-cancelled { background: #fee2e2; color: #991b1b; }
+
+.btn-sm-custom {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+}
 
 /* Responsive Dashboard */
 @media (max-width: 1024px) {

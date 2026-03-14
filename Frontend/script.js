@@ -1,10 +1,23 @@
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
+        const targetId = this.getAttribute('href');
+        
+        // Skip if target is just '#' or empty
+        if (targetId === '#' || !targetId) return;
+
+        try {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        } catch (error) {
+            // Handle invalid selectors like [href="#some-invalid-id"]
+            console.warn("Invalid scroll target:", targetId);
+        }
     });
 });
 
@@ -22,19 +35,29 @@ const loginForm = document.getElementById('loginForm');
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const role = document.getElementById('role').value;
-        alert(`Successfully logged in as ${role}! Redirecting to dashboard...`);
-        // In a real app, redirection would happen here
+        const roleElement = document.getElementById('role');
+        if (roleElement) {
+            const role = roleElement.value;
+            if (role === 'student') {
+                window.location.href = 'student_dashboard.html';
+            } else if (role === 'manager') {
+                window.location.href = 'manager_dashboard.html';
+            } else {
+                alert(`Successfully logged in as ${role}!`);
+            }
+        }
     });
 }
 
 // Navbar background change on scroll
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.style.boxShadow = 'var(--shadow-md)';
-    } else {
-        navbar.style.boxShadow = 'none';
+    if (navbar) {
+        if (window.scrollY > 50) {
+            navbar.style.boxShadow = 'var(--shadow-md)';
+        } else {
+            navbar.style.boxShadow = 'none';
+        }
     }
 });
 
