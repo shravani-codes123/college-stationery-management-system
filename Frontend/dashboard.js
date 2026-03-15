@@ -22,7 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Update header title
             const name = item.querySelector('span').innerText;
-            sectionTitle.innerText = name === 'Dashboard' ? 'Student Dashboard' : name;
+            const sidebarLogo = document.querySelector('.sidebar-logo')?.innerText || '';
+            
+            if (name === 'Dashboard') {
+                sectionTitle.innerText = sidebarLogo.includes('Manager') ? 'Manager Dashboard' : 'Student Dashboard';
+            } else {
+                sectionTitle.innerText = name;
+            }
         });
     });
 

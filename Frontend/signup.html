@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - KIT's Stationary System</title>
+    <title>Sign Up - KIT's Stationary System</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,56 +17,45 @@
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
-            <a href="signup.html">Sign Up</a>
-            <a href="login.html" class="active login-btn-nav">Login</a>
+            <a href="signup.html" class="active">Sign Up</a>
+            <a href="login.html" class="login-btn-nav">Login</a>
         </div>
     </nav>
 
-    <div class="login-card">
-        <h2>Login to KIT's Stationary System</h2>
-        <form id="loginForm">
+    <div class="login-card" style="margin-top: 5rem;">
+        <h2>Create an Account</h2>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" placeholder="John Doe" required>
+            </div>
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" placeholder="email@college.edu" required>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="••••••••" required>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm</label>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                </div>
             </div>
             <div class="form-group">
-                <label for="role">Role Selection</label>
-                <select id="role" required>
-                    <option value="" disabled selected>Select your role</option>
+                <label for="signupRole">Select Role</label>
+                <select id="signupRole" required>
+                    <option value="" disabled selected>Who are you?</option>
                     <option value="student">Student</option>
                     <option value="manager">Manager</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Profile</button>
             <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
-                Don't have an account? <a href="signup.html" style="color: var(--primary-color); font-weight: 600;">Sign up here</a>
+                Already have an account? <a href="login.html" style="color: var(--primary-color); font-weight: 600;">Login here</a>
             </p>
         </form>
-    </div>
-
-    <div class="role-features">
-        <div class="role-box">
-            <h3>Student Features</h3>
-            <ul>
-                <li>View Stationary Products</li>
-                <li>Purchase Items</li>
-                <li>Request Print/Xerox</li>
-                <li>View Order Status</li>
-            </ul>
-        </div>
-        <div class="role-box">
-            <h3>Manager Features</h3>
-            <ul>
-                <li>Manage Inventory</li>
-                <li>View Purchases</li>
-                <li>Handle Print Requests</li>
-                <li>Monitor Stock Alerts</li>
-            </ul>
-        </div>
     </div>
 
     <footer style="width: 100%; margin-top: 5rem;">

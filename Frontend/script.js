@@ -49,6 +49,32 @@ if (loginForm) {
     });
 }
 
+// Signup Logic
+const signupForm = document.getElementById('signupForm');
+if (signupForm) {
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const role = document.getElementById('signupRole').value;
+        const name = document.getElementById('fullName').value;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        alert(`Account created successfully for ${name} as a ${role}! Redirecting to dashboard...`);
+        
+        // Redirect based on role
+        if (role === 'student') {
+            window.location.href = 'student_dashboard.html';
+        } else if (role === 'manager') {
+            window.location.href = 'manager_dashboard.html';
+        }
+    });
+}
+
 // Navbar background change on scroll
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');

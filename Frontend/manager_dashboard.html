@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager Dashboard - Stationery Store System</title>
+    <title>Manager Dashboard - KIT's Stationary System</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,16 +21,7 @@
                     <i class="fas fa-chart-line"></i> <span>Dashboard</span>
                 </div>
                 <div class="menu-item" data-section="inventory">
-                    <i class="fas fa-boxes-stacked"></i> <span>Manage Inventory</span>
-                </div>
-                <div class="menu-item" data-section="add-product">
-                    <i class="fas fa-plus-circle"></i> <span>Add Product</span>
-                </div>
-                <div class="menu-item" data-section="update-product">
-                    <i class="fas fa-edit"></i> <span>Update Product</span>
-                </div>
-                <div class="menu-item" data-section="delete-product">
-                    <i class="fas fa-trash-alt"></i> <span>Delete Product</span>
+                    <i class="fas fa-boxes-stacked"></i> <span>Product Management</span>
                 </div>
                 <div class="menu-item" data-section="view-orders">
                     <i class="fas fa-shopping-bag"></i> <span>View Orders</span>
@@ -40,6 +31,9 @@
                 </div>
                 <div class="menu-item" data-section="stock-alerts">
                     <i class="fas fa-exclamation-triangle"></i> <span>Stock Alerts</span>
+                </div>
+                <div class="menu-item" data-section="sales-insights">
+                    <i class="fas fa-chart-bar"></i> <span>Sales Insights</span>
                 </div>
                 <a href="index.html" class="menu-item logout-btn">
                     <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
@@ -115,8 +109,15 @@
                     </div>
                 </section>
 
-                <!-- Inventory Management Table -->
+                <!-- Product Management Section (Merged Add, Update, Delete) -->
                 <section id="inventory" class="section">
+                    <div class="section-header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3>Product Catalog</h3>
+                        <button class="btn btn-primary" id="open-add-modal">
+                            <i class="fas fa-plus"></i> Add New Product
+                        </button>
+                    </div>
+                    
                     <div class="table-container">
                         <table>
                             <thead>
@@ -141,8 +142,8 @@
                                     <td>10%</td>
                                     <td><span class="status-badge status-completed">In Stock</span></td>
                                     <td>
-                                        <button class="btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
-                                        <button class="btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
+                                        <button class="btn edit-product-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
+                                        <button class="btn delete-product-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -154,8 +155,8 @@
                                     <td>0%</td>
                                     <td><span class="status-badge status-completed">In Stock</span></td>
                                     <td>
-                                        <button class="btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
-                                        <button class="btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
+                                        <button class="btn edit-product-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
+                                        <button class="btn delete-product-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -167,8 +168,8 @@
                                     <td>5%</td>
                                     <td><span class="status-badge status-pending" style="background: #fee2e2; color: #991b1b;">Low Stock</span></td>
                                     <td>
-                                        <button class="btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
-                                        <button class="btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
+                                        <button class="btn edit-product-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
+                                        <button class="btn delete-product-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -176,105 +177,54 @@
                     </div>
                 </section>
 
-                <!-- Add Product Form -->
-                <section id="add-product" class="section">
-                    <div class="contact-form" style="max-width: 700px; margin: 0 auto; box-shadow: none; border: 1px solid var(--border-color);">
-                        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                            <div class="form-group">
-                                <label>Product Name</label>
-                                <input type="text" placeholder="Enter product name">
-                            </div>
-                            <div class="form-group">
-                                <label>Category</label>
-                                <select>
-                                    <option>Pen</option>
-                                    <option>Notebook</option>
-                                    <option>Pencil</option>
-                                    <option>Geometry Box</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
+                <!-- Product Action Modal (Add/Update) -->
+                <div id="product-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-title">Add New Product</h3>
+                            <span class="close-modal">&times;</span>
                         </div>
-                        <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
-                            <div class="form-group">
-                                <label>Price (₹)</label>
-                                <input type="number" placeholder="0">
-                            </div>
-                            <div class="form-group">
-                                <label>Quantity</label>
-                                <input type="number" placeholder="0">
-                            </div>
-                            <div class="form-group">
-                                <label>Discount (%)</label>
-                                <input type="number" placeholder="0">
-                            </div>
+                        <div class="modal-body">
+                            <form id="product-form">
+                                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                    <div class="form-group">
+                                        <label>Product Name</label>
+                                        <input type="text" id="prod-name" placeholder="Enter product name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <select id="prod-category">
+                                            <option>Pen</option>
+                                            <option>Notebook</option>
+                                            <option>Pencil</option>
+                                            <option>Geometry Box</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                                    <div class="form-group">
+                                        <label>Price (₹)</label>
+                                        <input type="number" id="prod-price" placeholder="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Quantity</label>
+                                        <input type="number" id="prod-qty" placeholder="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Discount (%)</label>
+                                        <input type="number" id="prod-discount" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Product Image</label>
+                                    <input type="file" id="prod-image">
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Save Product</button>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label>Product Image</label>
-                            <input type="file">
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Add Product to Inventory</button>
                     </div>
-                </section>
-
-                <!-- Update Product Section -->
-                <section id="update-product" class="section">
-                    <div class="contact-form" style="max-width: 700px; margin: 0 auto; box-shadow: none; border: 1px solid var(--border-color);">
-                        <div class="form-group">
-                            <label>Search Product to Update</label>
-                            <input type="text" placeholder="Enter Product Name or ID">
-                        </div>
-                        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
-                            <div class="form-group">
-                                <label>New Price (₹)</label>
-                                <input type="number" placeholder="Selected: ₹0">
-                            </div>
-                            <div class="form-group">
-                                <label>New Quantity</label>
-                                <input type="number" placeholder="Selected: 0">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>New Discount (%)</label>
-                            <input type="number" placeholder="Selected: 0%">
-                        </div>
-                        <div class="form-group">
-                            <label>Update Image</label>
-                            <input type="file">
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Update Product Details</button>
-                    </div>
-                </section>
-
-                <!-- Delete Product Section -->
-                <section id="delete-product" class="section">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <th>Category</th>
-                                    <th>Current Stock</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Spiral Notebook A4</td>
-                                    <td>Notebook</td>
-                                    <td>45</td>
-                                    <td><button class="btn btn-delete-mock" style="color: #ef4444; font-weight: 600;">Delete</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Gel Pen Set</td>
-                                    <td>Pen</td>
-                                    <td>120</td>
-                                    <td><button class="btn btn-delete-mock" style="color: #ef4444; font-weight: 600;">Delete</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                </div>
 
                 <!-- Orders Management Section -->
                 <section id="view-orders" class="section">
@@ -380,23 +330,171 @@
                     </div>
                 </section>
 
+                <!-- Sales Insights Section -->
+                <section id="sales-insights" class="section">
+                    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+                        <!-- Top Sellers -->
+                        <div class="card" style="padding: 2rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; color: #10b981;">
+                                <i class="fas fa-arrow-trend-up" style="font-size: 1.5rem;"></i>
+                                <h3 style="color: var(--text-main);">Top Selling Products</h3>
+                            </div>
+                            <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-color);">
+                                <table style="font-size: 0.9rem;">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Sales</th>
+                                            <th>Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Spiral Notebook A4</td>
+                                            <td>850</td>
+                                            <td>₹1,27,500</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gel Pen Set</td>
+                                            <td>620</td>
+                                            <td>₹31,000</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Classmate Register</td>
+                                            <td>450</td>
+                                            <td>₹22,500</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Low Performers -->
+                        <div class="card" style="padding: 2rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; color: #ef4444;">
+                                <i class="fas fa-arrow-trend-down" style="font-size: 1.5rem;"></i>
+                                <h3 style="color: var(--text-main);">Slow Moving Items</h3>
+                            </div>
+                            <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-color);">
+                                <table style="font-size: 0.9rem;">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Sales</th>
+                                            <th>Stock</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Geometry Box (Pro)</td>
+                                            <td>12</td>
+                                            <td>45</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Desk Organizer</td>
+                                            <td>8</td>
+                                            <td>20</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Scientific Calculator</td>
+                                            <td>5</td>
+                                            <td>15</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Trend Mockup -->
+                    <div class="card" style="margin-top: 2rem; padding: 2rem; text-align: center;">
+                        <h3 style="margin-bottom: 1.5rem; text-align: left;">Monthly Sales Performance</h3>
+                        <div style="height: 250px; background: #f8fafc; border-radius: var(--radius-md); display: flex; align-items: flex-end; justify-content: space-around; padding: 2rem; border: 1px dashed var(--border-color);">
+                            <div style="width: 45px; height: 40%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Jan: 450 units"></div>
+                            <div style="width: 45px; height: 65%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Feb: 650 units"></div>
+                            <div style="width: 45px; height: 50%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Mar: 500 units"></div>
+                            <div style="width: 45px; height: 90%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Apr: 900 units"></div>
+                            <div style="width: 45px; height: 75%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="May: 750 units"></div>
+                            <div style="width: 45px; height: 85%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Jun: 850 units"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around; margin-top: 1rem; color: var(--text-muted); font-weight: 500;">
+                            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+                        </div>
+                    </div>
+                </section>
+
             </div>
 
             <footer style="margin-top: auto; padding: 2rem; background: transparent; color: var(--text-muted); text-align: center; border-top: 1px solid var(--border-color);">
-                <p>&copy; 2026 College Stationery Store Management System</p>
+                <p>&copy; 2026 KIT's Stationary System</p>
             </footer>
         </main>
     </div>
 
     <script src="dashboard.js"></script>
     <script>
-        // Inline script for manager-specific delete confirmation
-        document.querySelectorAll('.btn-delete-mock').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if(confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
-                    btn.closest('tr').remove();
-                }
+        // Manager-specific logic for modal and actions
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('product-modal');
+            const openModalBtn = document.getElementById('open-add-modal');
+            const closeModalBtn = document.querySelector('.close-modal');
+            const productForm = document.getElementById('product-form');
+            const modalTitle = document.getElementById('modal-title');
+
+            // Open modal for adding
+            if(openModalBtn) {
+                openModalBtn.onclick = () => {
+                    modalTitle.innerText = 'Add New Product';
+                    productForm.reset();
+                    modal.style.display = 'block';
+                };
+            }
+
+            // Close modal
+            if(closeModalBtn) {
+                closeModalBtn.onclick = () => modal.style.display = 'none';
+            }
+
+            window.onclick = (event) => {
+                if (event.target == modal) modal.style.display = 'none';
+            };
+
+            // Handle Edit buttons
+            document.querySelectorAll('.edit-product-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const row = btn.closest('tr');
+                    const name = row.cells[1].innerText;
+                    const cat = row.cells[2].innerText;
+                    const price = row.cells[3].innerText.replace('₹', '');
+                    const qty = row.cells[4].innerText;
+                    const disc = row.cells[5].innerText.replace('%', '');
+
+                    modalTitle.innerText = 'Update Product: ' + name;
+                    document.getElementById('prod-name').value = name;
+                    document.getElementById('prod-category').value = cat;
+                    document.getElementById('prod-price').value = price;
+                    document.getElementById('prod-qty').value = qty;
+                    document.getElementById('prod-discount').value = disc;
+                    
+                    modal.style.display = 'block';
+                };
             });
+
+            // Handle Delete buttons
+            document.querySelectorAll('.delete-product-btn').forEach(btn => {
+                btn.onclick = () => {
+                    if(confirm('Are you sure you want to delete this product?')) {
+                        btn.closest('tr').remove();
+                    }
+                };
+            });
+
+            // Handle Form Submission
+            productForm.onsubmit = (e) => {
+                e.preventDefault();
+                alert('Product details saved successfully!');
+                modal.style.display = 'none';
+            };
         });
     </script>
 </body>
