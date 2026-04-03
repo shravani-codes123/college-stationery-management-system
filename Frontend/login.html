@@ -27,11 +27,14 @@
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" placeholder="email@college.edu" required>
+                <input type="email" id="email" placeholder="email@college.edu" autocomplete="email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="••••••••" required>
+                <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+            </div>
+            <div style="text-align: right; margin-bottom: 1.5rem; margin-top: -0.5rem;">
+                <a href="forgot_password.html" style="color: var(--primary-color); font-size: 0.85rem; font-weight: 500;">Forgot Password?</a>
             </div>
             <div class="form-group">
                 <label for="role">Role Selection</label>
@@ -41,7 +44,10 @@
                     <option value="manager">Manager</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+            <div id="login-error" style="display: none; color: #dc2626; background: #fee2e2; padding: 0.5rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-size: 0.85rem; text-align: center;">
+                Invalid email or password
+            </div>
+            <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
             <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
                 Don't have an account? <a href="signup.html" style="color: var(--primary-color); font-weight: 600;">Sign up here</a>
             </p>
@@ -86,5 +92,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="login.js"></script>
 </body>
 </html>

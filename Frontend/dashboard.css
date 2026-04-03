@@ -383,10 +383,10 @@ td {
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--secondary-color);
+    margin-bottom: 0.65rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #475569; /* Explicit dark color for visibility */
 }
 
 .form-group input, .form-group select {

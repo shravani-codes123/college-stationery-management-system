@@ -51,7 +51,9 @@
                     <option value="manager">Manager</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Profile</button>
+            <div id="signup-message" style="display: none; padding: 0.75rem; border-radius: var(--radius-sm); margin: 1rem 0; font-size: 0.9rem; text-align: center;">
+            </div>
+            <button type="submit" id="signupBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Profile</button>
             <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
                 Already have an account? <a href="login.html" style="color: var(--primary-color); font-weight: 600;">Login here</a>
             </p>
@@ -75,5 +77,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="signup.js"></script>
 </body>
 </html>
