@@ -1,0 +1,161 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.college:stationery >-----------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.5.11:run (default-cli) > test-compile @ stationery >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ stationery ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ stationery ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ stationery ---
+[INFO] skip non existing resourceDirectory C:\Users\Swati\OneDrive\Desktop\mini-project\college-stationery-management-system\stationery\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ stationery ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.5.11:run (default-cli) < test-compile @ stationery <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.5.11:run (default-cli) @ stationery ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.11)
+
+2026-04-03T17:55:15.705+05:30  INFO 1356 --- [  restartedMain] com.college.stationery.Application       : Starting Application using Java 25.0.2 with PID 1356 (C:\Users\Swati\OneDrive\Desktop\mini-project\college-stationery-management-system\stationery\target\classes started by Swati in C:\Users\Swati\OneDrive\Desktop\mini-project\college-stationery-management-system\stationery)
+2026-04-03T17:55:15.708+05:30  INFO 1356 --- [  restartedMain] com.college.stationery.Application       : No active profile set, falling back to 1 default profile: "default"
+2026-04-03T17:55:15.790+05:30  INFO 1356 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-04-03T17:55:15.790+05:30  INFO 1356 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-04-03T17:55:16.765+05:30  INFO 1356 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-03T17:55:16.856+05:30  INFO 1356 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 78 ms. Found 5 JPA repository interfaces.
+2026-04-03T17:55:17.795+05:30  INFO 1356 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-04-03T17:55:17.813+05:30  INFO 1356 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-03T17:55:17.814+05:30  INFO 1356 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-04-03T17:55:17.876+05:30  INFO 1356 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-03T17:55:17.877+05:30  INFO 1356 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2085 ms
+2026-04-03T17:55:18.118+05:30  INFO 1356 --- [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-03T17:55:18.185+05:30  INFO 1356 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.42.Final
+2026-04-03T17:55:18.226+05:30  INFO 1356 --- [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-03T17:55:18.644+05:30  INFO 1356 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-03T17:55:18.685+05:30  INFO 1356 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-03T17:55:18.978+05:30  INFO 1356 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7a64657d
+2026-04-03T17:55:18.981+05:30  INFO 1356 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-03T17:55:19.039+05:30  WARN 1356 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000511: The 5.5.5 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
+2026-04-03T17:55:19.045+05:30  WARN 1356 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-03T17:55:19.073+05:30  INFO 1356 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 5.5.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-03T17:55:20.281+05:30  INFO 1356 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: create table cart_items (id bigint not null auto_increment, name varchar(255), price float(53), quantity integer, user_id bigint, primary key (id)) engine=InnoDB
+Hibernate: create table orders (id bigint not null auto_increment, items varchar(2000), order_date datetime(6), status varchar(255), total_price float(53), user_id bigint, primary key (id)) engine=InnoDB
+Hibernate: create table print_requests (id bigint not null auto_increment, copies integer, doc_name varchar(255), pages integer, status varchar(255), type varchar(255), primary key (id)) engine=InnoDB
+Hibernate: create table products (id bigint not null auto_increment, category varchar(255), discount integer, image_url varchar(255), name varchar(255), price float(53), quantity integer, primary key (id)) engine=InnoDB
+Hibernate: create table users (id bigint not null auto_increment, email varchar(255) not null, full_name varchar(255), password varchar(255) not null, role varchar(255), primary key (id)) engine=InnoDB
+Hibernate: alter table users drop index UK6dotkott2kjsp8vw4d0m25fb7
+Hibernate: alter table users add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2026-04-03T17:55:20.408+05:30  INFO 1356 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-03T17:55:21.039+05:30  WARN 1356 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-03T17:55:21.334+05:30  WARN 1356 --- [  restartedMain] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 278390d4-1a54-4794-a668-61d905b196bf
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-04-03T17:55:21.342+05:30  INFO 1356 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-04-03T17:55:21.726+05:30  INFO 1356 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-04-03T17:55:21.782+05:30  INFO 1356 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-04-03T17:55:21.793+05:30  INFO 1356 --- [  restartedMain] com.college.stationery.Application       : Started Application in 6.631 seconds (process running for 7.158)
+2026-04-03T17:56:15.003+05:30  INFO 1356 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-03T17:56:15.004+05:30  INFO 1356 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-03T17:56:15.008+05:30  INFO 1356 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: insert into users (email,full_name,password,role) values (?,?,?,?)
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select o1_0.id,o1_0.items,o1_0.order_date,o1_0.status,o1_0.total_price,o1_0.user_id from orders o1_0
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+2026-04-03T18:15:41.112+05:30  WARN 1356 --- [l-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m21s962ms555┬╡s800ns).
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select o1_0.id,o1_0.items,o1_0.order_date,o1_0.status,o1_0.total_price,o1_0.user_id from orders o1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: insert into users (email,full_name,password,role) values (?,?,?,?)
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select o1_0.id,o1_0.items,o1_0.order_date,o1_0.status,o1_0.total_price,o1_0.user_id from orders o1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0 where ci1_0.name=? and ci1_0.user_id=?
+Hibernate: insert into cart_items (name,price,quantity,user_id) values (?,?,?,?)
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0 where ci1_0.name=? and ci1_0.user_id=?
+Hibernate: insert into cart_items (name,price,quantity,user_id) values (?,?,?,?)
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: insert into orders (items,order_date,status,total_price,user_id) values (?,?,?,?,?)
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: delete from cart_items where id=?
+Hibernate: delete from cart_items where id=?
+Hibernate: select o1_0.id,o1_0.items,o1_0.order_date,o1_0.status,o1_0.total_price,o1_0.user_id from orders o1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: insert into users (email,full_name,password,role) values (?,?,?,?)
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select o1_0.id,o1_0.items,o1_0.order_date,o1_0.status,o1_0.total_price,o1_0.user_id from orders o1_0
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select pr1_0.id,pr1_0.copies,pr1_0.doc_name,pr1_0.pages,pr1_0.status,pr1_0.type from print_requests pr1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select pr1_0.id,pr1_0.copies,pr1_0.doc_name,pr1_0.pages,pr1_0.status,pr1_0.type from print_requests pr1_0
+Hibernate: select o1_0.id,o1_0.items,o1_0.order_date,o1_0.status,o1_0.total_price,o1_0.user_id from orders o1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: insert into products (category,discount,image_url,name,price,quantity) values (?,?,?,?,?,?)
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.email,u1_0.full_name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+Hibernate: select p1_0.id,p1_0.category,p1_0.discount,p1_0.image_url,p1_0.name,p1_0.price,p1_0.quantity from products p1_0
+Hibernate: select o1_0.id,o1_0.items,o1_0.order_date,o1_0.status,o1_0.total_price,o1_0.user_id from orders o1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0 where ci1_0.name=? and ci1_0.user_id=?
+Hibernate: insert into cart_items (name,price,quantity,user_id) values (?,?,?,?)
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0 where ci1_0.name=? and ci1_0.user_id=?
+Hibernate: insert into cart_items (name,price,quantity,user_id) values (?,?,?,?)
+Hibernate: select ci1_0.id,ci1_0.name,ci1_0.price,ci1_0.quantity,ci1_0.user_id from cart_items ci1_0
+Hibernate: insert into print_requests (copies,doc_name,pages,status,type) values (?,?,?,?,?)
