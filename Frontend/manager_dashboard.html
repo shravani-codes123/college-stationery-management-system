@@ -130,46 +130,8 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#P-101</td>
-                                    <td>Spiral Notebook A4</td>
-                                    <td>Notebook</td>
-                                    <td>₹150</td>
-                                    <td>45</td>
-                                    <td>10%</td>
-                                    <td><span class="status-badge status-completed">In Stock</span></td>
-                                    <td>
-                                        <button class="btn edit-product-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
-                                        <button class="btn delete-product-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P-102</td>
-                                    <td>Gel Pen Set</td>
-                                    <td>Pen</td>
-                                    <td>₹50</td>
-                                    <td>120</td>
-                                    <td>0%</td>
-                                    <td><span class="status-badge status-completed">In Stock</span></td>
-                                    <td>
-                                        <button class="btn edit-product-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
-                                        <button class="btn delete-product-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P-103</td>
-                                    <td>Scientific Calculator</td>
-                                    <td>Electronics</td>
-                                    <td>₹850</td>
-                                    <td>4</td>
-                                    <td>5%</td>
-                                    <td><span class="status-badge status-pending" style="background: #fee2e2; color: #991b1b;">Low Stock</span></td>
-                                    <td>
-                                        <button class="btn edit-product-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
-                                        <button class="btn delete-product-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
-                                    </td>
-                                </tr>
+                            <tbody id="inventory-tbody">
+                                <!-- Products will be loaded from database -->
                             </tbody>
                         </table>
                     </div>
@@ -438,43 +400,66 @@
             const closeModalBtn = document.querySelector('.close-modal');
             const productForm = document.getElementById('product-form');
             const modalTitle = document.getElementById('modal-title');
-            
             let currentEditId = null;
+            let existingImageUrl = 'notebook.jpeg'; // Default fallback
+
+            // ➕ Modal Open Handlers
+            if (openModalBtn) {
+                openModalBtn.onclick = () => {
+                    currentEditId = null; // Important: Clear ID for NEW products! 👈
+                    existingImageUrl = 'notebook.jpeg'; // Reset image to default
+                    modalTitle.innerText = 'Add New Product';
+                    productForm.reset();
+                    modal.style.display = 'block';
+                };
+            }
 
             // 1. 📦 Dynamic Inventory Management
             async function loadInventory() {
-                const tbody = document.querySelector('#inventory tbody');
+                const tbody = document.getElementById('inventory-tbody');
+                if (!tbody) return;
+
                 try {
                     const response = await fetch('http://localhost:8080/api/products');
                     const products = await response.json();
                     
-                    // Update Stat Card
-                    document.querySelector('#overview .stat-card h3').textContent = products.length;
+                    // Update Stat Cards (Total & Low Stock)
+                    const stats = document.querySelectorAll('#overview .stat-card h3');
+                    if (stats.length >= 2) {
+                        stats[0].textContent = products.length;
+                        stats[1].textContent = products.filter(p => p.quantity < 10).length;
+                    }
 
-                    tbody.innerHTML = '';
-                    products.forEach(p => {
-                        const statusClass = p.quantity < 10 ? 'status-pending' : 'status-completed';
-                        const statusText = p.quantity < 10 ? 'Low Stock' : 'In Stock';
-                        
-                        tbody.innerHTML += `
-                            <tr data-id="${p.id}">
-                                <td>#P-${p.id}</td>
-                                <td>${p.name}</td>
-                                <td>${p.category}</td>
-                                <td>₹${p.price}</td>
-                                <td>${p.quantity}</td>
-                                <td>${p.discount}%</td>
-                                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                                <td>
-                                    <button class="btn edit-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
-                                    <button class="btn delete-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>`;
-                    });
+                    tbody.innerHTML = ''; // Start Fresh! 👈
 
-                    // Re-attach event listeners
-                    attachActionListeners();
-                } catch (e) { console.error("Inventory Load Error:", e); }
+                    if (products && products.length > 0) {
+                        products.forEach(p => {
+                            const statusClass = p.quantity < 10 ? 'status-pending' : 'status-completed';
+                            const statusText = p.quantity < 10 ? 'Low Stock' : 'In Stock';
+                            
+                            tbody.innerHTML += `
+                                <tr data-id="${p.id}" data-img="${p.imageUrl || 'notebook.jpeg'}">
+                                    <td>#P-${p.id}</td>
+                                    <td>${p.name}</td>
+                                    <td>${p.category}</td>
+                                    <td>₹${p.price}</td>
+                                    <td>${p.quantity}</td>
+                                    <td>${p.discount}%</td>
+                                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                                    <td>
+                                        <button class="btn edit-btn" style="color: var(--primary-color);"><i class="fas fa-edit"></i></button>
+                                        <button class="btn delete-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>`;
+                        });
+                        attachActionListeners();
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 2rem; color: #6b7280;">No products found. Please add a product.</td></tr>';
+                    }
+                } catch (e) {
+                    console.error("Inventory Load Error:", e);
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 2rem; color: #ef4444;">Server Connection Failed. Check if backend is running!</td></tr>';
+                }
             }
 
             function attachActionListeners() {
@@ -482,6 +467,8 @@
                     btn.onclick = () => {
                         const row = btn.closest('tr');
                         currentEditId = row.dataset.id;
+                        existingImageUrl = row.dataset.img; // Store existing image 👈
+                        
                         modalTitle.innerText = 'Update Product: ' + row.cells[1].innerText;
                         document.getElementById('prod-name').value = row.cells[1].innerText;
                         document.getElementById('prod-category').value = row.cells[2].innerText;
@@ -496,8 +483,13 @@
                     btn.onclick = async () => {
                         const id = btn.closest('tr').dataset.id;
                         if (confirm('Are you sure you want to delete this product?')) {
-                            await fetch(`http://localhost:8080/api/products/${id}`, { method: 'DELETE' });
-                            loadInventory(); 
+                            try {
+                                const response = await fetch(`http://localhost:8080/api/products/${id}`, { method: 'DELETE' });
+                                if (response.ok) {
+                                    alert('Product Deleted Successfully!');
+                                    loadInventory();
+                                }
+                            } catch (e) { alert('Delete failed. Is backend running?'); }
                         }
                     };
                 });
@@ -505,18 +497,25 @@
 
             productForm.onsubmit = async (e) => {
                 e.preventDefault();
+                
+                // Determine which image to use (Selected file > Existing URL > Default)
+                const selectedFile = document.getElementById('prod-image').files[0];
+                const finalImageUrl = selectedFile ? selectedFile.name : existingImageUrl;
+
                 const productData = {
                     name: document.getElementById('prod-name').value,
                     category: document.getElementById('prod-category').value,
                     price: parseFloat(document.getElementById('prod-price').value),
                     quantity: parseInt(document.getElementById('prod-qty').value),
-                    discount: parseInt(document.getElementById('prod-discount').value || 0)
+                    discount: parseInt(document.getElementById('prod-discount').value || 0),
+                    imageUrl: finalImageUrl
                 };
 
                 const url = currentEditId ? `http://localhost:8080/api/products/${currentEditId}` : 'http://localhost:8080/api/products';
                 const method = currentEditId ? 'PUT' : 'POST';
 
                 try {
+                    console.log(`Sending ${method} request to ${url}`, productData);
                     const response = await fetch(url, {
                         method: method,
                         headers: { 'Content-Type': 'application/json' },
@@ -524,11 +523,18 @@
                     });
 
                     if (response.ok) {
-                        alert(currentEditId ? 'Product Updated!' : 'Product Added!');
+                        alert(currentEditId ? 'Product Updated Successfully!' : 'Product Added Successfully!');
                         modal.style.display = 'none';
                         loadInventory();
+                    } else {
+                        const errorText = await response.text();
+                        console.error("Server Error:", response.status, errorText);
+                        alert(`Failed to save product. Server returned: ${response.status} ${response.statusText}`);
                     }
-                } catch (e) { alert("Error saving product."); }
+                } catch (e) { 
+                    console.error("Network/Fetch Error:", e);
+                    alert("Error saving product. Please check if the backend server is running and accessible."); 
+                }
             };
 
             // 2. 🛒 Dynamic Orders View
@@ -551,11 +557,18 @@
                                 <td>₹${o.totalPrice}</td>
                                 <td>${new Date(o.orderDate).toLocaleDateString()}</td>
                                 <td><span class="status-badge status-pending">${o.status}</span></td>
-                                <td><button class="btn btn-primary btn-sm-custom">Update</button></td>
+                                <td><button class="btn btn-primary btn-sm-custom" onclick="updateOrderStatus(${o.id}, 'COMPLETED')">Complete</button></td>
                             </tr>`;
                     });
                 } catch (e) { console.error("Orders Load Error:", e); }
             }
+
+            window.updateOrderStatus = async (id, status) => {
+                if(confirm(`Mark Order #${id} as ${status}?`)) {
+                    await fetch(`http://localhost:8080/api/orders/${id}?status=${status}`, { method: 'PUT' });
+                    loadOrders();
+                }
+            };
 
             // 3. 📄 Dynamic Print Requests
             async function loadPrintRequests() {
@@ -577,11 +590,18 @@
                                 <td>${r.pages}</td>
                                 <td>${r.type}</td>
                                 <td><span class="status-badge status-pending">${r.status}</span></td>
-                                <td><button class="btn btn-primary btn-sm-custom">Complete</button></td>
+                                <td><button class="btn btn-primary btn-sm-custom" onclick="updatePrintStatus(${r.id}, 'COMPLETED')">Complete</button></td>
                             </tr>`;
                     });
                 } catch (e) { console.error("Print Load Error:", e); }
             }
+
+            window.updatePrintStatus = async (id, status) => {
+                if(confirm(`Mark Print Request #${id} as ${status}?`)) {
+                    await fetch(`http://localhost:8080/api/print-requests/${id}?status=${status}`, { method: 'PUT' });
+                    loadPrintRequests();
+                }
+            };
 
             // Modal Controls
             if(openModalBtn) {

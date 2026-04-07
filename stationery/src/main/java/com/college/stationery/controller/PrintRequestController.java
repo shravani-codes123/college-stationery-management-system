@@ -26,4 +26,12 @@ public class PrintRequestController {
     public List<PrintRequest> getAllRequests() {
         return repository.findAll();
     }
+
+    // Update Print Request Status (For Manager)
+    @PutMapping("/{id}")
+    public PrintRequest updateRequestStatus(@PathVariable Long id, @RequestParam String status) {
+        PrintRequest request = repository.findById(id).orElseThrow();
+        request.setStatus(status.toUpperCase());
+        return repository.save(request);
+    }
 }

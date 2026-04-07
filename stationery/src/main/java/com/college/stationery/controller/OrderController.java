@@ -22,6 +22,15 @@ public class OrderController {
         return ResponseEntity.ok(orderRepository.save(order));
     }
 
+    // Update Order Status (For Manager)
+    @PutMapping("/{id}")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+        return orderRepository.findById(id).map(order -> {
+            order.setStatus(status.toUpperCase());
+            return ResponseEntity.ok(orderRepository.save(order));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     // Get ALL Orders (For Manager tracking)
     @GetMapping
     public List<Order> getAllOrders() {

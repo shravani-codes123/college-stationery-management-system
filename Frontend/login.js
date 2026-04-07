@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!loginForm) return;
 
-    loginForm.addEventListener('submit', async function(e) {
+    loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         // Get Input Values
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Reset UI State
         errorDiv.style.display = 'none';
-        
+
         // Input Validation
         if (!email || !password || !role) {
             showError('Please fill in all fields (Email, Password, and Role)');
