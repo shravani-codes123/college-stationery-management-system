@@ -220,9 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 alert(`Order Success! Order ID: #ORD-${data.id}`);
                 
-                // Clear Database Cart
-                await fetch('http://localhost:8080/api/cart/clear', { method: 'DELETE' });
-                
                 updateCartDisplay();
                 loadOrderHistory(); // 👈 Refresh the history table
                 document.querySelector('[data-section="orders"]')?.click();

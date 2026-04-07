@@ -20,6 +20,14 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public List<Product> getLowStockProducts(int threshold) {
+        return productRepository.findByQuantityLessThan(threshold);
+    }
+
+    public Optional<Product> getProductByName(String name) {
+        return productRepository.findByName(name);
+    }
+
     public Product saveProduct(Product product) {
         logger.info("Saving product: " + product.getName());
         return productRepository.save(product);

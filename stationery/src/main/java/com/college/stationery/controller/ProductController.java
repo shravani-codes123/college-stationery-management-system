@@ -20,6 +20,12 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    // Get products with LOW STOCK
+    @GetMapping("/low-stock")
+    public List<Product> getLowStock(@RequestParam(defaultValue = "10") int threshold) {
+        return productService.getLowStockProducts(threshold);
+    }
+
     // Add a new product (For Manager)
     @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
