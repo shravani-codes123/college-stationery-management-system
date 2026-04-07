@@ -25,6 +25,15 @@ public class OrderController {
     @Autowired
     private com.college.stationery.repository.CartItemRepository cartItemRepository;
 
+    @Autowired
+    private com.college.stationery.service.EmailService emailService;
+
+    @Autowired
+    private com.college.stationery.repository.NotificationRepository notificationRepository;
+
+    @Autowired
+    private com.college.stationery.repository.UserRepository userRepository;
+
     // Place NEW Order (Student Checkout)
     @PostMapping("/checkout")
     @Transactional
@@ -75,8 +84,32 @@ public class OrderController {
     @PutMapping("/{id}")
     public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
         return orderRepository.findById(id).map(order -> {
-            order.setStatus(status.toUpperCase());
-            return ResponseEntity.ok(orderRepository.save(order));
+            String oldStatus = order.getStatus();
+            String newStatus = status.toUpperCase();
+            order.setStatus(newStatus);
+            Order updatedOrder = orderRepository.save(order);
+
+            // 📢 TRIGGER NOTIFICATION & EMAIL if order is COMPLETED
+            if ("COMPLETED".equals(newStatus) && !"COMPLETED".equals(oldStatus)) {
+                userRepository.findById(order.getUserId()).ifPresent(user -> {
+                    // 1. Create Dashboard Notification
+                    com.college.stationery.model.Notification notif = new com.college.stationery.model.Notification();
+                    notif.setUserId(user.getId());
+                    notif.setMessage("Your order #ORD-" + order.getId() + " has been completed! You can collect it now.");
+                    notificationRepository.save(notif);
+
+                    // 2. Send Real Email
+                    try {
+                        String subject = "Order Completed - KIT's Stationary";
+                        String body = "Hello " + user.getFullName() + ",\n\nYour order #" + order.getId() + " is READY for pickup.\n\nItems: " + order.getItems() + "\nTotal: ₹" + order.getTotalPrice() + "\n\nThank you for shopping with us!";
+                        emailService.sendSimpleEmail(user.getEmail(), subject, body);
+                    } catch (Exception e) {
+                        logger.severe("Email failed for order " + order.getId() + ": " + e.getMessage());
+                    }
+                });
+            }
+
+            return ResponseEntity.ok(updatedOrder);
         }).orElse(ResponseEntity.notFound().build());
     }
 

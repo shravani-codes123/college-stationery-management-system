@@ -62,6 +62,7 @@ public class AuthController {
         response.put("token", "jwt-token-" + UUID.randomUUID());
         response.put("role", user.getRole());
         response.put("fullName", user.getFullName());
+        response.put("userId", String.valueOf(user.getId())); // 👈 Added for dashboard notifications
         return ResponseEntity.ok(response);
     }
 

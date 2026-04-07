@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("userName", data.fullName);
                 localStorage.setItem("userRole", data.role);
+                localStorage.setItem("userId", data.userId); // 👈 For notifications logic
 
                 // 3. Perfect Redirection
                 const userRole = data.role.toUpperCase(); // Ensure we match "STUDENT" or "MANAGER"
