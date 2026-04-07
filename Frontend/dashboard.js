@@ -399,7 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const docName = document.getElementById('pr-docName').value;
             const pages = document.getElementById('pr-pages').value;
             const type = document.getElementById('pr-type').value;
-            const copies = document.getElementById('pr-copies').value;
 
             if (!docName) {
                 alert("Please enter a document name.");
@@ -413,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const response = await fetch('http://localhost:8080/api/print-requests', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ docName, pages, type, copies })
+                        body: JSON.stringify({ docName, pages, type, copies: 1 })
                     });
 
                     if (response.ok) {
@@ -445,19 +444,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 💰 Print Price Calculator Logic
     const calculatePrintPrice = () => {
-        const pages = parseInt(document.getElementById('pr-pages')?.value || 0);
-        const copies = parseInt(document.getElementById('pr-copies')?.value || 0);
+        const pages = Math.max(0, parseInt(document.getElementById('pr-pages')?.value || 0));
         const type = document.getElementById('pr-type')?.value;
         const priceDisplay = document.getElementById('pr-estimated-price');
 
         if (!priceDisplay) return;
 
         const rate = type === "Color" ? 5 : 2; // ₹5 for Color, ₹2 for B&W
-        const total = pages * copies * rate;
+        const total = Math.max(0, pages * rate);
         priceDisplay.textContent = total;
     };
 
-    ['pr-pages', 'pr-copies', 'pr-type'].forEach(id => {
+    ['pr-pages', 'pr-type'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', calculatePrintPrice);
         document.getElementById(id)?.addEventListener('change', calculatePrintPrice);
     });
