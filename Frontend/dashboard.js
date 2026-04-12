@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 productList.innerHTML = ''; // ONLY clear if we have database data
                 products.forEach(product => {
                     const discountHtml = product.discount > 0 ? `<span class="discount-tag">${product.discount}% OFF</span>` : '';
+                    const ratingId = `rating-${product.id}`;
                     const card = `
                         <div class="product-card">
                             <div class="product-img">
@@ -79,12 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${discountHtml}
                             <div class="product-details">
                                 <div class="product-name">${product.name}</div>
+                                <div id="${ratingId}"></div> <!-- Dynamic Rating Display -->
                                 <div class="product-price">₹${product.price}</div>
                                 <div class="product-stock">Stock: ${product.quantity} available</div>
-                                <button class="btn btn-primary" onclick="addToCart('${product.name}', ${product.price}, ${product.quantity})" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Add to Cart</button>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button class="btn btn-primary" onclick="addToCart('${product.name}', ${product.price}, ${product.quantity})" style="flex: 2; padding: 0.5rem;">Add to Cart</button>
+                                    <button class="btn" onclick="openFeedbackModal(${product.id})" style="flex: 1; padding: 0.5rem; background: #f8fafc; border: 1px solid var(--border-color);"><i class="far fa-comment"></i></button>
+                                </div>
                             </div>
                         </div>`;
                     productList.innerHTML += card;
+                    // Trigger rating load asynchronously
+                    if (window.loadProductRatings) window.loadProductRatings(product.id, ratingId);
                 });
             } else {
                 // 👤 FALLBACK STATS (For hardcoded HTML products)
@@ -256,13 +263,37 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // 🚛 Collect & Validate Address
+        const fullName = document.getElementById('dev-fullname').value;
+        const phone = document.getElementById('dev-phone').value;
+        const address = document.getElementById('dev-address').value;
+        const city = document.getElementById('dev-city').value;
+        const pincode = document.getElementById('dev-pincode').value;
+
+        if (!fullName || !phone || !address || !city || !pincode) {
+            alert("Please fill in all delivery address details.");
+            document.getElementById('dev-fullname').focus();
+            return;
+        }
+
+        if (phone.length < 10) {
+            alert("Please enter a valid 10-digit phone number.");
+            return;
+        }
+
+        const addressData = { fullName, phoneNumber: phone, addressLine: address, city, pincode };
+
         await window.startPaymentFlow(totalPrice, async () => {
-            await window.finalizeOrder(totalPrice);
+            await window.finalizeOrder(totalPrice, addressData);
         });
     };
 
-    window.finalizeOrder = async (totalPrice) => {
-        const orderData = { totalPrice, items: "Cart Order" }; 
+    window.finalizeOrder = async (totalPrice, addressData) => {
+        const orderData = { 
+            totalPrice, 
+            userId: localStorage.getItem('userId') || 1,
+            ...addressData 
+        }; 
 
         try {
             const response = await fetch('http://localhost:8080/api/orders/checkout', {
@@ -283,7 +314,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     z-index: 10000; display: flex; align-items: center; gap: 1rem;
                     font-weight: 700; animation: slideDown 0.5s ease-out;
                 `;
-                toast.innerHTML = `<i class="fas fa-check-circle" style="font-size: 1.5rem;"></i> <div>Order Placed Successfully!<br><span style="font-size: 0.8rem; font-weight: 400;">Order ID: #ORD-${data.id}</span></div>`;
+                toast.innerHTML = `
+                    <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i> 
+                    <div style="flex: 1;">
+                        Order Placed Successfully!<br>
+                        <span style="font-size: 0.8rem; font-weight: 400;">Order ID: #ORD-${data.id}</span>
+                    </div>
+                    <button class="btn" onclick="downloadInvoice(${data.id})" style="background: white; color: #22c55e; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; margin-left: 1rem;">
+                        <i class="fas fa-download"></i> Invoice
+                    </button>`;
                 document.body.appendChild(toast);
                 
                 setTimeout(() => {
@@ -304,6 +343,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 updateCartDisplay(); // Sync with backend
                 loadOrderHistory(); // 👈 Refresh the history table
+                
+                // Clear address form
+                document.getElementById('dev-fullname').value = '';
+                document.getElementById('dev-phone').value = '';
+                document.getElementById('dev-address').value = '';
+                document.getElementById('dev-city').value = '';
+                document.getElementById('dev-pincode').value = '';
+
                 document.querySelector('[data-section="orders"]')?.click();
             } else {
                 alert("Server error during checkout.");
@@ -354,13 +401,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!orderTable) return;
 
         try {
-            const response = await fetch('http://localhost:8080/api/orders');
+            const userId = localStorage.getItem('userId') || 1;
+            const response = await fetch(`http://localhost:8080/api/orders/user/${userId}`);
             const orders = await response.json();
             
-            // 👤 Update Dashboard Stat Card
+            // 👤 Update Dashboard Stat Card (Only Pending/Active Orders)
             const activeOrderCountDisplay = document.getElementById('active-orders-count');
             if (activeOrderCountDisplay) {
-                activeOrderCountDisplay.textContent = orders.length;
+                const activeOrders = orders.filter(o => o.status === 'PENDING');
+                activeOrderCountDisplay.textContent = activeOrders.length;
             }
 
             if (orders && orders.length > 0) {
@@ -369,14 +418,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Format date (e.g., 2026-04-02)
                     const dateObj = new Date(order.orderDate);
                     const formattedDate = dateObj.toLocaleDateString();
+                    
+                    // 🚚 Delivery Status Mapping
+                    const trackingMap = {
+                        'PENDING': 'Placed ✔',
+                        'PACKED': 'Packed ✔',
+                        'OUT_FOR_DELIVERY': 'Out for Delivery 🚚',
+                        'DELIVERED': 'Delivered ✅'
+                    };
+                    const trackingText = trackingMap[order.deliveryStatus] || 'Placed ✔';
 
                     orderTable.innerHTML += `
                         <tr>
                             <td>#ORD-${order.id}</td>
-                            <td>Stationery Items</td>
+                            <td>${order.items || 'Stationery Items'}</td>
                             <td>₹${order.totalPrice}</td>
                             <td>${formattedDate}</td>
-                            <td><span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></td>
+                            <td><span class="status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">PAID</span></td>
+                            <td><span class="status-badge status-${order.deliveryStatus.toLowerCase() === 'delivered' ? 'completed' : 'pending'}">${trackingText}</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="downloadInvoice(${order.id})" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">
+                                    <i class="fas fa-file-pdf"></i> Bill
+                                </button>
+                            </td>
                         </tr>`;
                 });
             }
@@ -384,6 +448,26 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Order history retrieval error:", e);
         }
     }
+
+    window.downloadInvoice = async (orderId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/orders/${orderId}/invoice`);
+            if (!response.ok) throw new Error("Invoice generation failed");
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Invoice_ORD_${orderId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (error) {
+            console.error("Error downloading invoice:", error);
+            alert("Could not download invoice. Please try again later.");
+        }
+    };
 
     // Initial Display Load
     updateCartCounter();
@@ -405,14 +489,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            const fileInput = document.getElementById('pr-file');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            const sets = parseInt(document.getElementById('pr-sets').value || 1);
             const estimatedPrice = parseInt(document.getElementById('pr-estimated-price')?.textContent || '0');
+            const userId = localStorage.getItem('userId') || 101; // Fallback
 
             await window.startPaymentFlow(estimatedPrice, async () => {
                 try {
+                    const formData = new FormData();
+                    const printRequest = {
+                        docName: docName,
+                        pages: parseInt(pages),
+                        type: type,
+                        copies: sets,
+                        userId: parseInt(userId)
+                    };
+                    
+                    // Collect Address if > 100
+                    if (estimatedPrice > 100) {
+                        printRequest.fullName = document.getElementById('pr-dev-fullname').value;
+                        printRequest.phoneNumber = document.getElementById('pr-dev-phone').value;
+                        printRequest.addressLine = document.getElementById('pr-dev-address').value;
+                        printRequest.city = document.getElementById('pr-dev-city').value;
+                        printRequest.pincode = document.getElementById('pr-dev-pincode').value;
+                    }
+                    
+                    // Add the print request as a JSON blob
+                    formData.append('request', new Blob([JSON.stringify(printRequest)], {
+                        type: 'application/json'
+                    }));
+                    
+                    // Add the file
+                    formData.append('file', file);
+
                     const response = await fetch('http://localhost:8080/api/print-requests', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ docName, pages, type, copies: 1 })
+                        body: formData // Fetch automatically sets multipart boundary
                     });
 
                     if (response.ok) {
@@ -430,9 +549,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         setTimeout(() => toast.remove(), 4000);
 
                         document.getElementById('pr-docName').value = ''; // Clear form
+                        document.getElementById('pr-pages').value = '1';
+                        document.getElementById('pr-sets').value = '1';
                         document.getElementById('pr-estimated-price').innerText = '0';
+                        document.getElementById('pr-address-section').style.display = 'none';
                     } else {
-                        alert("Failed to submit request.");
+                        const errorMsg = await response.text();
+                        alert("Failed to submit request: " + errorMsg);
                     }
                 } catch (error) {
                     console.error("Print submission error:", error);
@@ -445,42 +568,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // 💰 Print Price Calculator Logic
     const calculatePrintPrice = () => {
         const pages = Math.max(0, parseInt(document.getElementById('pr-pages')?.value || 0));
+        const sets = Math.max(1, parseInt(document.getElementById('pr-sets')?.value || 1));
         const type = document.getElementById('pr-type')?.value;
         const priceDisplay = document.getElementById('pr-estimated-price');
+        const addressSection = document.getElementById('pr-address-section');
 
         if (!priceDisplay) return;
 
         const rate = type === "Color" ? 5 : 2; // ₹5 for Color, ₹2 for B&W
-        const total = Math.max(0, pages * rate);
+        const total = Math.max(0, pages * sets * rate);
         priceDisplay.textContent = total;
+
+        // 🚛 Delivery Logic: Only for orders > ₹100
+        if (addressSection) {
+            addressSection.style.display = total > 100 ? 'block' : 'none';
+        }
     };
 
-    ['pr-pages', 'pr-type'].forEach(id => {
+    ['pr-pages', 'pr-type', 'pr-sets'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', calculatePrintPrice);
         document.getElementById(id)?.addEventListener('change', calculatePrintPrice);
     });
 
-    // Mock Search
-    const searchInput = document.querySelector('.search-box input');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const products = document.querySelectorAll('.product-card');
-            const tableRows = document.querySelectorAll('tbody tr');
-            
-            // Filter products cards
-            products.forEach(product => {
-                const name = product.querySelector('.product-name').innerText.toLowerCase();
-                product.style.display = name.includes(query) ? 'block' : 'none';
-            });
-
-            // Filter table rows
-            tableRows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
-        });
-    }
 
     // 🏎️ QUICK ACTION NAVIGATION
     document.getElementById('quick-new-print')?.addEventListener('click', () => {
@@ -491,60 +600,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('[data-section="orders"]')?.click();
     });
 
-    // 🔔 SMART NOTIFICATIONS (Periodically fetch from backend)
-    const checkNotifications = async () => {
-        const userId = localStorage.getItem('userId') || 1; // Simulation: Default to 1
+    window.updatePrintQueueStatus = async () => {
+        const userId = localStorage.getItem('userId') || 101;
+        const queueDiv = document.getElementById('print-queue-info');
+        if (!queueDiv) return;
+
         try {
-            const response = await fetch(`http://localhost:8080/api/notifications/unread?userId=${userId}`);
-            const notifications = await response.json();
-            window.updateNotificationBadge(notifications.length);
-        } catch (e) {
-            console.error("Failed to fetch notifications:", e);
-        }
-    };
+            const response = await fetch(`http://localhost:8080/api/print-requests/queue-status/${userId}`);
+            const data = await response.json();
 
-    // Mark as read when bell icon is clicked
-    const bellBtn = document.querySelector('.fa-bell')?.parentElement;
-    if (bellBtn) {
-        bellBtn.addEventListener('click', async () => {
-            const userId = localStorage.getItem('userId') || 1;
-            try {
-                await fetch(`http://localhost:8080/api/notifications/mark-read?userId=${userId}`, { method: 'PUT' });
-                window.updateNotificationBadge(0);
-            } catch (e) {
-                console.error("Failed to mark notifications as read:", e);
+            if (data.active) {
+                queueDiv.style.display = 'block';
+                document.getElementById('queue-pos').innerText = data.position;
+                document.getElementById('queue-time').innerText = data.estimatedTimeMinutes;
+            } else {
+                queueDiv.style.display = 'none';
             }
-        });
-    }
-
-    // Run notification check every 10 seconds
-    setInterval(checkNotifications, 10000);
-    checkNotifications(); // Initial check
-
-    window.updateNotificationBadge = (count) => {
-        const badge = document.getElementById('notification-badge');
-        if (!badge) return;
-
-        if (count > 0) {
-            badge.textContent = count;
-            badge.style.display = 'block';
-        } else {
-            badge.style.display = 'none';
-        }
+        } catch (e) { console.error("Queue status error:", e); }
     };
 
-    window.updateCommentBadge = (count) => {
-        const badge = document.getElementById('comment-badge');
-        if (!badge) return;
+    setInterval(window.updatePrintQueueStatus, 15000);
+    window.updatePrintQueueStatus();
 
-        if (count > 0) {
-            badge.textContent = count;
-            badge.style.display = 'block';
-        } else {
-            badge.style.display = 'none';
-        }
-    };
-
-    updateNotificationBadge(0);
     updateCommentBadge(0);
 });

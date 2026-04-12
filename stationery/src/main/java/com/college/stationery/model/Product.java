@@ -17,4 +17,5 @@ public class Product {
     private Integer quantity;
     private Integer discount;
     private String imageUrl;
+    private Integer salesCount = 0;
 }

@@ -420,3 +420,145 @@ td {
     .search-box { display: none; }
     .modal-content { margin: 10% auto; width: 95%; padding: 1.5rem; }
 }
+
+/* Notifications Dropdown */
+.notification-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 320px;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    display: none;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.notification-dropdown.active {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.notif-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notif-header h3 {
+    font-size: 1rem;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.notif-header button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.notif-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notif-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    transition: 0.2s;
+    color: var(--text-main);
+}
+
+.notif-item:hover {
+    background: #f8fafc;
+}
+
+.notif-item.unread {
+    background: #f0f9ff;
+    border-left: 3px solid var(--primary-color);
+}
+
+.no-notif {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/* Feedback & Rating Styles */
+.rating-stars {
+    color: #f59e0b;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+}
+
+.feedback-section {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.star-input {
+    display: flex;
+    gap: 0.25rem;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.star-input i {
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: #d1d5db;
+    transition: 0.2s;
+}
+
+.star-input i:hover,
+.star-input i:hover ~ i,
+.star-input i.active,
+.star-input i.active ~ i {
+    color: #f59e0b;
+}
+
+.feedback-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.feedback-btn:hover {
+    text-decoration: underline;
+}
+
+.feedback-modal {
+    display: none;
+    position: fixed;
+    z-index: 10001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+}
+
+.feedback-modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 450px;
+    box-shadow: var(--shadow-xl);
+}

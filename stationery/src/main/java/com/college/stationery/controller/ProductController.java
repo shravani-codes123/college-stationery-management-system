@@ -14,9 +14,18 @@ public class ProductController {
     @Autowired
     private com.college.stationery.service.ProductService productService;
 
-    // Get ALL Products
+    // Get ALL Products with optional filtering
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean discount) {
+        
+        if (name != null || category != null || minPrice != null || maxPrice != null || discount != null) {
+            return productService.searchAndFilterProducts(name, category, minPrice, maxPrice, discount);
+        }
         return productService.getAllProducts();
     }
 

@@ -12,12 +12,20 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId; // We'll link this to the logged-in student later
+    private Long userId;
     private Double totalPrice;
-    private String status = "PENDING";
+    private String status = "PENDING"; // General status (PENDING/COMPLETED)
     private LocalDateTime orderDate = LocalDateTime.now();
     
-    // For simplicity, we can store order details as a string or items later
     @Column(length = 2000)
-    private String items; 
+    private String items;
+
+    // 🚚 New Delivery Fields
+    private String fullName;
+    private String phoneNumber;
+    private String addressLine;
+    private String city;
+    private String pincode;
+    private String deliveryStatus = "PENDING"; // PENDING, PACKED, OUT_FOR_DELIVERY, DELIVERED
+    private String paymentStatus = "PAID"; // Default to PAID as per requirements
 }
