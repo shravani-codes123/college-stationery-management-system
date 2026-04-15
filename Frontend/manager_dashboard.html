@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="dashboard-wrapper">
@@ -48,9 +49,18 @@
                 
                     
                 <div class="header-actions">
-                    <div class="icon-btn">
+                    <div class="icon-btn" id="notification-bell">
                         <i class="fas fa-bell"></i>
-                        <span class="badge">5</span>
+                        <span class="badge" id="notif-badge" style="display: none;">0</span>
+                        <div class="notification-dropdown" id="notif-dropdown">
+                            <div class="notif-header">
+                                <h3>Notifications</h3>
+                                <button id="mark-all-read">Mark all as read</button>
+                            </div>
+                            <div class="notif-list" id="notif-list">
+                                <p class="no-notif">No new notifications</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="profile-img">A</div>
                 </div>
@@ -84,8 +94,8 @@
                                 <i class="fas fa-calendar-check"></i>
                             </div>
                             <div class="stat-info">
-                                <span>Today's Orders</span>
-                                <h3>15</h3>
+                                <span>Pending Orders</span>
+                                <h3>0</h3>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -94,7 +104,7 @@
                             </div>
                             <div class="stat-info">
                                 <span>Pending Print</span>
-                                <h3>4</h3>
+                                <h3>0</h3>
                             </div>
                         </div>
                     </div>
@@ -193,11 +203,11 @@
                             <thead>
                                 <tr>
                                     <th>Order ID</th>
-                                    <th>Student Name</th>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
+                                    <th>Customer Details</th>
+                                    <th>Items</th>
+                                    <th>Total Price</th>
+                                    <th>Delivery Address</th>
+                                    <th>Delivery Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -232,10 +242,11 @@
                             <thead>
                                 <tr>
                                     <th>Req ID</th>
-                                    <th>Student Name</th>
-                                    <th>Doc Name</th>
-                                    <th>Pages</th>
+                                    <th>Student</th>
+                                    <th>Document</th>
+                                    <th>Pages / Sets</th>
                                     <th>Type</th>
+                                    <th>Delivery Address</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -293,92 +304,28 @@
                 <!-- Sales Insights Section -->
                 <section id="sales-insights" class="section">
                     <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
-                        <!-- Top Sellers -->
+                        <!-- Daily Sales Chart -->
                         <div class="card" style="padding: 2rem;">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; color: #10b981;">
-                                <i class="fas fa-arrow-trend-up" style="font-size: 1.5rem;"></i>
-                                <h3 style="color: var(--text-main);">Top Selling Products</h3>
-                            </div>
-                            <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-color);">
-                                <table style="font-size: 0.9rem;">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Sales</th>
-                                            <th>Revenue</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Spiral Notebook A4</td>
-                                            <td>850</td>
-                                            <td>₹1,27,500</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gel Pen Set</td>
-                                            <td>620</td>
-                                            <td>₹31,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Classmate Register</td>
-                                            <td>450</td>
-                                            <td>₹22,500</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <h3>Daily Sales Trend</h3>
+                            <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                <canvas id="dailySalesChart"></canvas>
                             </div>
                         </div>
 
-                        <!-- Low Performers -->
+                        <!-- Top Products Chart -->
                         <div class="card" style="padding: 2rem;">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; color: #ef4444;">
-                                <i class="fas fa-arrow-trend-down" style="font-size: 1.5rem;"></i>
-                                <h3 style="color: var(--text-main);">Slow Moving Items</h3>
-                            </div>
-                            <div class="table-container" style="box-shadow: none; border: 1px solid var(--border-color);">
-                                <table style="font-size: 0.9rem;">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Sales</th>
-                                            <th>Stock</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Geometry Box (Pro)</td>
-                                            <td>12</td>
-                                            <td>45</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Desk Organizer</td>
-                                            <td>8</td>
-                                            <td>20</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Scientific Calculator</td>
-                                            <td>5</td>
-                                            <td>15</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <h3>Top Selling Products</h3>
+                            <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                <canvas id="topProductsChart"></canvas>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Monthly Trend Mockup -->
-                    <div class="card" style="margin-top: 2rem; padding: 2rem; text-align: center;">
-                        <h3 style="margin-bottom: 1.5rem; text-align: left;">Monthly Sales Performance</h3>
-                        <div style="height: 250px; background: #f8fafc; border-radius: var(--radius-md); display: flex; align-items: flex-end; justify-content: space-around; padding: 2rem; border: 1px dashed var(--border-color);">
-                            <div style="width: 45px; height: 40%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Jan: 450 units"></div>
-                            <div style="width: 45px; height: 65%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Feb: 650 units"></div>
-                            <div style="width: 45px; height: 50%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Mar: 500 units"></div>
-                            <div style="width: 45px; height: 90%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Apr: 900 units"></div>
-                            <div style="width: 45px; height: 75%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="May: 750 units"></div>
-                            <div style="width: 45px; height: 85%; background: linear-gradient(to top, var(--primary-color), #60a5fa); border-radius: 6px 6px 0 0; transition: 0.3s; cursor: pointer;" title="Jun: 850 units"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-around; margin-top: 1rem; color: var(--text-muted); font-weight: 500;">
-                            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+                    <!-- Monthly Sales Chart -->
+                    <div class="card" style="margin-top: 2rem; padding: 2rem;">
+                        <h3>Monthly Sales Performance</h3>
+                        <div class="chart-container" style="position: relative; height:350px; width:100%">
+                            <canvas id="monthlySalesChart"></canvas>
                         </div>
                     </div>
                 </section>
@@ -392,6 +339,8 @@
     </div>
 
     <script src="dashboard.js"></script>
+    <script src="notifications.js"></script>
+    <script src="analytics.js"></script>
     <script>
         // 📊 Manager Dashboard: Full Database Connection Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -615,24 +564,54 @@
                     const response = await fetch('http://localhost:8080/api/orders');
                     const orders = await response.json();
                     
-                    // Update Stat Card
-                    document.querySelectorAll('#overview .stat-card h3')[2].textContent = orders.length;
+                    // Update Stat Card (Only Pending Orders)
+                    const pendingOrders = orders.filter(o => o.status === 'PENDING');
+                    document.querySelectorAll('#overview .stat-card h3')[2].textContent = pendingOrders.length;
 
                     tbody.innerHTML = '';
                     orders.forEach(o => {
+                        const address = o.fullName ? `${o.fullName}<br>${o.phoneNumber}<br>${o.addressLine}, ${o.city} - ${o.pincode}` : 'N/A';
+                        const statusClass = o.deliveryStatus === 'DELIVERED' ? 'status-completed' : 'status-pending';
+
                         tbody.innerHTML += `
                             <tr>
                                 <td>#ORD-${o.id}</td>
-                                <td>User ID: ${o.userId || 'Guest'}</td>
-                                <td>${o.items || 'Stationery Bundle'}</td>
+                                <td>${o.fullName || 'User ID: '+o.userId}</td>
+                                <td title="${o.items}">${(o.items || 'Stationery').substring(0, 30)}...</td>
                                 <td>₹${o.totalPrice}</td>
-                                <td>${new Date(o.orderDate).toLocaleDateString()}</td>
-                                <td><span class="status-badge status-pending">${o.status}</span></td>
-                                <td><button class="btn btn-primary btn-sm-custom" onclick="updateOrderStatus(${o.id}, 'COMPLETED')">Complete</button></td>
+                                <td style="font-size: 0.75rem; line-height: 1.3; color: var(--text-muted);">${address}</td>
+                                <td>
+                                    <select onchange="updateDeliveryStatus(${o.id}, this.value)" class="status-badge ${statusClass}" style="border: 1px solid var(--border-color); cursor: pointer; font-size: 0.7rem; font-weight: 700;">
+                                        <option value="PENDING" ${o.deliveryStatus === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                                        <option value="PACKED" ${o.deliveryStatus === 'PACKED' ? 'selected' : ''}>PACKED</option>
+                                        <option value="OUT_FOR_DELIVERY" ${o.deliveryStatus === 'OUT_FOR_DELIVERY' ? 'selected' : ''}>OUT FOR DELIVERY</option>
+                                        <option value="DELIVERED" ${o.deliveryStatus === 'DELIVERED' ? 'selected' : ''}>DELIVERED</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-primary btn-sm-custom" onclick="updateOrderStatus(${o.id}, 'COMPLETED')"><i class="fas fa-check"></i></button>
+                                        <button class="btn btn-primary btn-sm-custom" onclick="downloadInvoice(${o.id}, 'invoice_${o.id}.pdf')" style="background: #64748b;"><i class="fas fa-file-invoice"></i></button>
+                                    </div>
+                                </td>
                             </tr>`;
                     });
                 } catch (e) { console.error("Orders Load Error:", e); }
             }
+
+            window.updateDeliveryStatus = async (id, status) => {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/orders/${id}/status`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ deliveryStatus: status })
+                    });
+                    if (response.ok) {
+                        alert(`Order #${id} marked as ${status}`);
+                        loadOrders();
+                    }
+                } catch (e) { alert("Error updating delivery status"); }
+            };
 
             window.updateOrderStatus = async (id, status) => {
                 if(confirm(`Mark Order #${id} as ${status}?`)) {
@@ -648,20 +627,33 @@
                     const response = await fetch('http://localhost:8080/api/print-requests');
                     const requests = await response.json();
 
-                    // Update Stat Card
-                    document.querySelectorAll('#overview .stat-card h3')[3].textContent = requests.length;
+                    // Update Stat Card (Only Pending Print Requests)
+                    const pendingPrint = requests.filter(r => r.status === 'PENDING');
+                    document.querySelectorAll('#overview .stat-card h3')[3].textContent = pendingPrint.length;
 
                     tbody.innerHTML = '';
                     requests.forEach(r => {
+                        const address = r.fullName ? `<b>${r.fullName}</b><br>${r.addressLine}, ${r.city}` : '<span style="color:#94a3b8;"><i class="fas fa-walking"></i> Pickup</span>';
+                        
                         tbody.innerHTML += `
                             <tr>
                                 <td>#PR-${r.id}</td>
-                                <td>Student Member</td>
-                                <td>${r.docName}</td>
-                                <td>${r.pages}</td>
+                                <td>User #${r.userId}</td>
+                                <td title="${r.docName}">${r.docName.substring(0, 12)}...</td>
+                                <td>${r.pages} / <b>${r.copies || 1}</b></td>
                                 <td>${r.type}</td>
+                                <td style="font-size: 0.7rem; line-height: 1.2; vertical-align: middle;">${address}</td>
                                 <td><span class="status-badge status-pending">${r.status}</span></td>
-                                <td><button class="btn btn-primary btn-sm-custom" onclick="updatePrintStatus(${r.id}, 'COMPLETED')">Complete</button></td>
+                                <td>
+                                    <div style="display: flex; gap: 0.3rem;">
+                                        <button class="btn btn-primary btn-sm-custom" onclick="downloadPrintFile(${r.id}, '${r.docName.replace(/'/g, "\\'")}')" title="Download File">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                        <button class="btn btn-primary btn-sm-custom" onclick="updatePrintStatus(${r.id}, 'COMPLETED')" title="Mark Completed" style="background:#10b981;">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>`;
                     });
                 } catch (e) { console.error("Print Load Error:", e); }
@@ -671,6 +663,25 @@
                 if(confirm(`Mark Print Request #${id} as ${status}?`)) {
                     await fetch(`http://localhost:8080/api/print-requests/${id}?status=${status}`, { method: 'PUT' });
                     loadPrintRequests();
+                }
+            };
+
+            window.downloadPrintFile = async (id, fileName) => {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/print-requests/download/${id}`);
+                    if (!response.ok) throw new Error('Download failed');
+
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName || `print_request_${id}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                } catch (e) {
+                    alert("Error downloading file. It might have been deleted or doesn't exist.");
                 }
             };
 

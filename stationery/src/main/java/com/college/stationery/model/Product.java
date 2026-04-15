@@ -18,4 +18,5 @@ public class Product {
     private Integer discount;
     private Integer salesCount = 0; // Track units sold for insights
     private String imageUrl;
+    private Integer salesCount = 0;
 }

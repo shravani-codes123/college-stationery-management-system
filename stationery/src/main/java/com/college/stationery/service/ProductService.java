@@ -20,6 +20,16 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public List<Product> searchAndFilterProducts(String name, String category, Double minPrice, Double maxPrice, Boolean hasDiscount) {
+        return productRepository.filterProducts(
+            (name == null || name.isEmpty()) ? null : name,
+            (category == null || category.isEmpty() || "All".equalsIgnoreCase(category)) ? null : category,
+            minPrice,
+            maxPrice,
+            hasDiscount != null ? hasDiscount : false
+        );
+    }
+
     public List<Product> getLowStockProducts(int threshold) {
         return productRepository.findByQuantityLessThan(threshold);
     }

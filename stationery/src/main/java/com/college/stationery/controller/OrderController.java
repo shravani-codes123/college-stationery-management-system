@@ -2,10 +2,16 @@ package com.college.stationery.controller;
 
 import com.college.stationery.model.Order;
 import com.college.stationery.repository.OrderRepository;
+import com.college.stationery.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -39,6 +45,12 @@ public class OrderController {
 
     @Autowired
     private com.college.stationery.repository.UserRepository userRepository;
+
+    @Autowired
+    private InvoiceService invoiceService;
+
+    @Autowired
+    private com.college.stationery.service.OrderService orderService;
 
     // Place NEW Order (Student Checkout)
     @PostMapping("/checkout")
@@ -93,7 +105,16 @@ public class OrderController {
                 logger.info("Deducting " + cart.getQuantity() + " from stock of " + prod.getName());
                 int newQty = Math.max(0, prod.getQuantity() - cart.getQuantity());
                 prod.setQuantity(newQty);
+                prod.setSalesCount((prod.getSalesCount() == null ? 0 : prod.getSalesCount()) + cart.getQuantity());
                 productRepository.save(prod);
+
+                // 🔔 Trigger Low Stock Alert
+                if (newQty < 5) {
+                    com.college.stationery.model.Notification alert = new com.college.stationery.model.Notification();
+                    alert.setUserId(1L); // Send to Manager (Assuming ID 1 is manager or broadcast)
+                    alert.setMessage("LOW STOCK ALERT: " + prod.getName() + " only " + newQty + " left!");
+                    notificationRepository.save(alert);
+                }
             });
         }
 
@@ -105,9 +126,17 @@ public class OrderController {
 
         order.setItems(finalSummary.isEmpty() ? "Stationery Items" : finalSummary);
         order.setStatus("PENDING");
+        order.setDeliveryStatus("PENDING");
+        order.setPaymentStatus("PAID");
         
-        com.college.stationery.model.Order savedOrder = orderRepository.save(order);
+        com.college.stationery.model.Order savedOrder = orderService.saveOrder(order);
         
+        // 🔔 Notify Manager about new order
+        com.college.stationery.model.Notification adminNotif = new com.college.stationery.model.Notification();
+        adminNotif.setUserId(1L); // Assuming 1 is Manager
+        adminNotif.setMessage("New Order Received! Order ID: #ORD-" + savedOrder.getId());
+        notificationRepository.save(adminNotif);
+
         // 3. Clear the cart in the same transaction
         cartItemRepository.deleteAll();
         logger.info("Order placed and cart cleared: Order ID " + savedOrder.getId());
@@ -152,6 +181,46 @@ public class OrderController {
     // Get ALL Orders (For Manager tracking)
     @GetMapping
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderService.getAllOrders();
+    }
+
+    // Get Orders by User ID (For Student tracking)
+    @GetMapping("/user/{userId}")
+    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
+        return orderService.getOrdersByUserId(userId);
+    }
+
+    // Update Delivery Status (For Manager)
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Order> updateDeliveryStatus(@PathVariable Long id, @RequestBody com.college.stationery.dto.DeliveryStatusDTO statusDTO) {
+        try {
+            Order updatedOrder = orderService.updateDeliveryStatus(id, statusDTO.getDeliveryStatus());
+            
+            // 📢 Notify Student of delivery update
+            userRepository.findById(updatedOrder.getUserId()).ifPresent(user -> {
+                com.college.stationery.model.Notification notif = new com.college.stationery.model.Notification();
+                notif.setUserId(user.getId());
+                notif.setMessage("Your order #ORD-" + updatedOrder.getId() + " status updated to: " + updatedOrder.getDeliveryStatus());
+                notificationRepository.save(notif);
+            });
+
+            return ResponseEntity.ok(updatedOrder);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/invoice")
+    public ResponseEntity<InputStreamResource> downloadInvoice(@PathVariable Long id) throws IOException {
+        Order order = orderRepository.findById(id).orElseThrow();
+        ByteArrayInputStream bis = invoiceService.generateInvoice(order);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=invoice_ORD_" + id + ".pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 }
