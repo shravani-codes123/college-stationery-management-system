@@ -646,6 +646,9 @@
                                 <td><span class="status-badge status-pending">${r.status}</span></td>
                                 <td>
                                     <div style="display: flex; gap: 0.3rem;">
+                                        <button class="btn btn-primary btn-sm-custom" onclick="viewPrintFile(${r.id})" title="View File" style="background: #6366f1;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                         <button class="btn btn-primary btn-sm-custom" onclick="downloadPrintFile(${r.id}, '${r.docName.replace(/'/g, "\\'")}')" title="Download File">
                                             <i class="fas fa-download"></i>
                                         </button>
@@ -659,6 +662,10 @@
                 } catch (e) { console.error("Print Load Error:", e); }
             }
 
+            window.viewPrintFile = (id) => {
+                window.open(`http://localhost:8080/api/print-requests/view/${id}`, '_blank');
+            };
+
             window.updatePrintStatus = async (id, status) => {
                 if(confirm(`Mark Print Request #${id} as ${status}?`)) {
                     await fetch(`http://localhost:8080/api/print-requests/${id}?status=${status}`, { method: 'PUT' });
@@ -671,11 +678,16 @@
                     const response = await fetch(`http://localhost:8080/api/print-requests/download/${id}`);
                     if (!response.ok) throw new Error('Download failed');
 
+                    let finalFileName = fileName || `print_request_${id}.pdf`;
+                    if (!finalFileName.toLowerCase().endsWith('.pdf')) {
+                        finalFileName += '.pdf';
+                    }
+                    
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = fileName || `print_request_${id}.pdf`;
+                    a.download = finalFileName;
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);

@@ -497,6 +497,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (file.type !== "application/pdf") {
+                alert("Please upload a PDF file only.");
+                return;
+            }
+
             const sets = parseInt(document.getElementById('pr-sets').value || 1);
             const estimatedPrice = parseInt(document.getElementById('pr-estimated-price')?.textContent || '0');
             const userId = localStorage.getItem('userId') || 101; // Fallback

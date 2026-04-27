@@ -86,7 +86,18 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
+        
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (!userOptional.isPresent()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "User with this email does not exist.");
+            return ResponseEntity.status(404).body(error);
+        }
+
+        User user = userOptional.get();
         String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        userRepository.save(user);
 
         try {
             sendEmail(email, token);
@@ -105,8 +116,17 @@ public class AuthController {
         String token = request.get("token");
         String newPassword = request.get("newPassword");
 
-        // Log the change (In a real app, update DB here)
-        System.out.println("Updating password for token [" + token + "] to [" + newPassword + "]");
+        Optional<User> userOptional = userRepository.findByResetToken(token);
+        if (!userOptional.isPresent()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "Invalid or expired reset token.");
+            return ResponseEntity.status(400).body(error);
+        }
+
+        User user = userOptional.get();
+        user.setPassword(newPassword);
+        user.setResetToken(null); // Clear the token after use
+        userRepository.save(user);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Password updated successfully!");
