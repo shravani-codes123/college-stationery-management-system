@@ -47,19 +47,49 @@ class SalesAnalytics {
         try {
             const data = await this.fetchData('http://localhost:8080/api/analytics/sales/monthly');
             new Chart(this.monthlyCtx, {
-                type: 'line',
+                type: 'bar', // Mixed chart
                 data: {
-                    labels: data.map(d => d.label),
-                    datasets: [{
-                        label: 'Monthly Revenue (₹)',
-                        data: data.map(d => d.value),
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
+                    labels: data.map(d => d.month),
+                    datasets: [
+                        {
+                            label: 'Monthly Revenue (₹)',
+                            data: data.map(d => d.revenue),
+                            backgroundColor: 'rgba(16, 185, 129, 0.4)',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Total Orders',
+                            data: data.map(d => d.orderCount),
+                            type: 'line',
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            fill: false,
+                            tension: 0.3,
+                            yAxisID: 'y1'
+                        }
+                    ]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Revenue (₹)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Order Count' }
+                        }
+                    }
+                }
             });
         } catch (e) { console.error("Monthly Sales Error:", e); }
     }

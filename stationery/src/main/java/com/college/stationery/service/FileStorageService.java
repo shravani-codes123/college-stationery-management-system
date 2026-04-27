@@ -16,7 +16,7 @@ public class FileStorageService {
 
     public String saveFile(MultipartFile file) throws IOException {
         // 1. Create upload directory if it doesn't exist
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -29,7 +29,7 @@ public class FileStorageService {
         Path filePath = uploadPath.resolve(uniqueFilename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        System.out.println("File saved successfully to: " + filePath);
+        System.out.println("File saved successfully to absolute path: " + filePath);
         return filePath.toString();
     }
 }

@@ -1,0 +1,15 @@
+id | full_name      | email                     | password    | role    |
++----+----------------+---------------------------+-------------+---------+
+|  1 | Test User      | admin@test.com            | password123 | STUDENT |
+|  2 | Sharayu Mohite | sharayumohite45@gmail.com | sharayu     | STUDENT |
+|  3 | manager        | user@gmail.com            | user123     | MANAGER |
+|  4 | sneha          | sneha@123                 | sneha       | MANAGER
+
+
+
+How we converted file into .pdf format
+
+1) PDF Enforcement: I used the accept=".pdf" attribute in HTML and added JavaScript validation
+ to ensure students can only send valid PDF documents.
+2) Smart Download Logic: I used custom browser logic to ensure 
+that every file you download from the manager dashboard automatically has the .pdf extension, making it compatible with your system's default PDF viewer.
