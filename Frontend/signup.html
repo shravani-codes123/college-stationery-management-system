@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="login-page">
     <nav class="navbar">
-        <a href="index.html" class="logo">KIT's Stationary System</a>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="KIT Logo" class="nav-logo-img">
+            KIT's Stationary System
+        </a>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
@@ -22,7 +25,7 @@
         </div>
     </nav>
 
-    <div class="login-card" style="margin-top: 5rem;">
+    <div class="login-card">
         <h2>Create an Account</h2>
         <form id="signupForm">
             <div class="form-group">
@@ -36,11 +39,17 @@
             <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" placeholder="••••••••" required minlength="6" style="padding-right: 2.5rem;">
+                        <i class="fa-solid fa-eye toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8;"></i>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="confirmPassword">Confirm</label>
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                    <div style="position: relative;">
+                        <input type="password" id="confirmPassword" placeholder="••••••••" required minlength="6" style="padding-right: 2.5rem;">
+                        <i class="fa-solid fa-eye toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8;"></i>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -62,7 +71,10 @@
 
     <footer style="width: 100%; margin-top: 5rem;">
         <div class="footer-content">
-            <div class="logo" style="color: white;">KIT's Stationary System</div>
+            <div class="logo" style="color: white;">
+                <img src="logo.png" alt="KIT Logo" class="nav-logo-img" style="filter: brightness(0) invert(1);">
+                KIT's Stationary System
+            </div>
             <div class="footer-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
