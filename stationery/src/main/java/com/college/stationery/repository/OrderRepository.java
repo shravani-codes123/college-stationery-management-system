@@ -11,7 +11,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT FUNCTION('DATE', o.orderDate) as date, SUM(o.totalPrice) as total FROM Order o GROUP BY FUNCTION('DATE', o.orderDate)")
     List<Object[]> getDailySales();
 
-    @Query("SELECT FUNCTION('MONTHNAME', o.orderDate) as month, SUM(o.totalPrice) as total FROM Order o GROUP BY FUNCTION('MONTH', o.orderDate), FUNCTION('MONTHNAME', o.orderDate)")
+    @Query("SELECT FUNCTION('MONTHNAME', o.orderDate) as month, SUM(o.totalPrice) as total, COUNT(o.id) as count FROM Order o GROUP BY FUNCTION('MONTH', o.orderDate), FUNCTION('MONTHNAME', o.orderDate) ORDER BY FUNCTION('MONTH', o.orderDate)")
     List<Object[]> getMonthlySales();
 
     List<Order> findByUserId(Long userId);

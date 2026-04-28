@@ -87,7 +87,18 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
+        
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (!userOptional.isPresent()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "User with this email does not exist.");
+            return ResponseEntity.status(404).body(error);
+        }
+
+        User user = userOptional.get();
         String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        userRepository.save(user);
 
         try {
             Optional<User> userOptional = userRepository.findByEmail(email);
@@ -120,13 +131,21 @@ public class AuthController {
         Optional<User> userOptional = userRepository.findByResetToken(token);
         if (!userOptional.isPresent()) {
             Map<String, String> error = new HashMap<>();
+<<<<<<< HEAD
             error.put("message", "Invalid or expired token!");
+=======
+            error.put("message", "Invalid or expired reset token.");
+>>>>>>> b41701ed275464c5071a51973b52548d6f152a60
             return ResponseEntity.status(400).body(error);
         }
 
         User user = userOptional.get();
         user.setPassword(newPassword);
+<<<<<<< HEAD
         user.setResetToken(null);
+=======
+        user.setResetToken(null); // Clear the token after use
+>>>>>>> b41701ed275464c5071a51973b52548d6f152a60
         userRepository.save(user);
 
         Map<String, String> response = new HashMap<>();

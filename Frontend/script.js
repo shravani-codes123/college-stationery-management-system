@@ -63,3 +63,19 @@ document.querySelectorAll('.card, .role-box, .tech-card, .objective-item').forEa
     el.style.transition = 'all 0.6s ease-out';
     observer.observe(el);
 });
+
+// Password visibility toggle
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('toggle-password')) {
+        const input = e.target.previousElementSibling;
+        if (input.type === 'password') {
+            input.type = 'text';
+            e.target.classList.remove('fa-eye');
+            e.target.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            e.target.classList.remove('fa-eye-slash');
+            e.target.classList.add('fa-eye');
+        }
+    }
+});

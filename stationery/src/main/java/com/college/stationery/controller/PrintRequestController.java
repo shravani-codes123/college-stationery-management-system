@@ -59,20 +59,48 @@ public class PrintRequestController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long id) {
+        return serveFile(id, false);
+    }
+
+    @GetMapping("/view/{id}")
+    public ResponseEntity<Resource> viewFile(@PathVariable Long id) {
+        return serveFile(id, true);
+    }
+
+    private ResponseEntity<Resource> serveFile(Long id, boolean inline) {
         PrintRequest request = repository.findById(id).orElseThrow();
         try {
             Path filePath = Paths.get(request.getFileUrl());
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() || resource.isReadable()) {
+                String contentType = "application/octet-stream";
+                if (request.getDocName() != null) {
+                    if (request.getDocName().toLowerCase().endsWith(".pdf")) {
+                        contentType = "application/pdf";
+                    } else if (request.getDocName().toLowerCase().endsWith(".jpg") || request.getDocName().toLowerCase().endsWith(".jpeg")) {
+                        contentType = "image/jpeg";
+                    } else if (request.getDocName().toLowerCase().endsWith(".png")) {
+                        contentType = "image/png";
+                    }
+                }
+
+                String disposition = inline ? "inline" : "attachment";
+                String filename = request.getDocName();
+                if ("application/pdf".equals(contentType) && !filename.toLowerCase().endsWith(".pdf")) {
+                    filename += ".pdf";
+                }
+
                 return ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, disposition + "; filename=\"" + filename + "\"")
                         .body(resource);
             } else {
+                System.err.println("File not found or not readable: " + request.getFileUrl());
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
