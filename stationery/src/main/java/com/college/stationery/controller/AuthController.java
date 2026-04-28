@@ -15,6 +15,7 @@ import com.college.stationery.repository.UserRepository;
 import com.college.stationery.model.User;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*") // 👈 Enable CORS for all origins
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -89,6 +90,17 @@ public class AuthController {
         String token = UUID.randomUUID().toString();
 
         try {
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            if (!userOptional.isPresent()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("message", "Email not found!");
+                return ResponseEntity.status(404).body(error);
+            }
+
+            User user = userOptional.get();
+            user.setResetToken(token);
+            userRepository.save(user);
+
             sendEmail(email, token);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Reset link sent to: " + email);
@@ -105,8 +117,17 @@ public class AuthController {
         String token = request.get("token");
         String newPassword = request.get("newPassword");
 
-        // Log the change (In a real app, update DB here)
-        System.out.println("Updating password for token [" + token + "] to [" + newPassword + "]");
+        Optional<User> userOptional = userRepository.findByResetToken(token);
+        if (!userOptional.isPresent()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "Invalid or expired token!");
+            return ResponseEntity.status(400).body(error);
+        }
+
+        User user = userOptional.get();
+        user.setPassword(newPassword);
+        user.setResetToken(null);
+        userRepository.save(user);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Password updated successfully!");
@@ -120,7 +141,7 @@ public class AuthController {
         helper.setTo(toEmail);
         helper.setSubject("Password Reset Request - KIT's Stationary");
         
-        String resetUrl = "http://127.0.0.1:5500/Frontend/reset_password.html?token=" + token;
+        String resetUrl = "http://localhost:5500/Frontend/reset_password.html?token=" + token;
         
         String content = "<div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;'>"
                 + "<h2 style='color: #2563eb;'>Password Reset Request</h2>"

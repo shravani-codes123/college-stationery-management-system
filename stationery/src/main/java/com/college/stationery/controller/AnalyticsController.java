@@ -1,7 +1,6 @@
 package com.college.stationery.controller;
 
 import com.college.stationery.dto.SalesDataDTO;
-import com.college.stationery.model.Product;
 import com.college.stationery.repository.OrderRepository;
 import com.college.stationery.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

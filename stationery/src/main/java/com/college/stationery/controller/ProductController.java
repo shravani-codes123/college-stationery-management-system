@@ -59,11 +59,6 @@ public class ProductController {
         }
     }
 
-    // Get Low Stock Products
-    @GetMapping("/low-stock")
-    public List<Product> getLowStockProducts(@RequestParam(name = "threshold", defaultValue = "10") Integer threshold) {
-        return productService.getLowStockProducts(threshold);
-    }
 
     // Delete product
     @DeleteMapping("/{id}")

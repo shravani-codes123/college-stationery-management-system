@@ -16,7 +16,6 @@ public class Product {
     private Double price;
     private Integer quantity;
     private Integer discount;
-    private Integer salesCount = 0; // Track units sold for insights
-    private String imageUrl;
     private Integer salesCount = 0;
+    private String imageUrl;
 }

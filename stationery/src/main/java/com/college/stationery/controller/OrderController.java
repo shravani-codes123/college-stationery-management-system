@@ -1,7 +1,6 @@
 package com.college.stationery.controller;
 
 import com.college.stationery.model.Order;
-import com.college.stationery.repository.OrderRepository;
 import com.college.stationery.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -32,12 +31,6 @@ public class OrderController {
     private com.college.stationery.repository.ProductRepository productRepository;
 
     @Autowired
-    private com.college.stationery.repository.ProductRepository productRepository;
-
-    @Autowired
-    private com.college.stationery.repository.CartItemRepository cartItemRepository;
-
-    @Autowired
     private com.college.stationery.service.EmailService emailService;
 
     @Autowired
@@ -53,36 +46,6 @@ public class OrderController {
     private com.college.stationery.service.OrderService orderService;
 
     // Place NEW Order (Student Checkout)
-    @PostMapping("/checkout")
-<<<<<<< HEAD
-    @org.springframework.transaction.annotation.Transactional
-    public ResponseEntity<?> placeOrder(@RequestBody Order order) {
-        // 1. Fetch Cart Items for the student (Default User ID 1)
-        java.util.List<com.college.stationery.model.CartItem> cartItems = cartItemRepository.findAll();
-        if (cartItems.isEmpty()) {
-            return ResponseEntity.badRequest().body("Cart is empty");
-        }
-
-        // 2. Update Inventory for each item
-        for (com.college.stationery.model.CartItem item : cartItems) {
-            java.util.Optional<com.college.stationery.model.Product> productOpt = productRepository.findByName(item.getName());
-            if (productOpt.isPresent()) {
-                com.college.stationery.model.Product product = productOpt.get();
-                if (product.getQuantity() < item.getQuantity()) {
-                    return ResponseEntity.badRequest().body("Insufficient stock for: " + item.getName());
-                }
-                product.setQuantity(product.getQuantity() - item.getQuantity());
-                productRepository.save(product);
-            }
-        }
-
-        // 3. Clear the Cart
-        cartItemRepository.deleteAll();
-
-        // 4. Save the Order
-        order.setStatus("PENDING");
-        Order savedOrder = orderRepository.save(order);
-=======
     @Transactional
     public ResponseEntity<com.college.stationery.model.Order> placeOrder(@RequestBody com.college.stationery.model.Order order) {
         logger.info("Processing checkout: totalPrice=" + order.getTotalPrice());
@@ -141,7 +104,6 @@ public class OrderController {
         cartItemRepository.deleteAll();
         logger.info("Order placed and cart cleared: Order ID " + savedOrder.getId());
         
->>>>>>> 23355cab09eae0e58fd8387d75e339331ffbf49d
         return ResponseEntity.ok(savedOrder);
     }
 
@@ -217,6 +179,7 @@ public class OrderController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=invoice_ORD_" + id + ".pdf");
+        headers.add("Access-Control-Expose-Headers", "Content-Disposition");
 
         return ResponseEntity.ok()
                 .headers(headers)
