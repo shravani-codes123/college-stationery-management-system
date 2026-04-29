@@ -19,8 +19,150 @@ class SalesAnalytics {
         await Promise.all([
             this.loadDailySales(),
             this.loadMonthlySales(),
-            this.loadTopProducts()
+            this.loadTopProducts(),
+            this.loadSalesInsights()
         ]);
+    }
+
+    async loadSalesInsights() {
+        try {
+            const response = await fetch('http://localhost:8080/api/insights/dashboard');
+            if (!response.ok) return;
+            const insights = await response.json();
+
+            // 1. Best Seller
+            if (insights.bestSeller) {
+                document.getElementById('best-seller-name').innerText = insights.bestSeller.name;
+                const tag = insights.bestSeller.seasonalTag || 'General Demand';
+                document.getElementById('best-seller-reason').innerText = `High demand: ${tag}`;
+            }
+
+            // 2. Low-Performing Alert
+            if (insights.lowPerforming && insights.lowPerforming.length > 0) {
+                const lp = insights.lowPerforming[0];
+                const lpAlert = document.getElementById('low-performing-alert');
+                if (lpAlert) {
+                    lpAlert.style.display = 'block';
+                    document.getElementById('low-performer-name').innerText = lp.name;
+                    document.getElementById('low-performer-reason').innerText = `High stock (${lp.quantity}), but low sales (${lp.salesCount || 0}).`;
+                }
+            }
+
+            // 3. Profit Margin
+            document.getElementById('profit-margin').innerText = `${insights.profitMargin}%`;
+            
+            // --- NEW: Profitability Stats ---
+            if (insights.profitability) {
+                document.getElementById('total-revenue').innerText = `₹${insights.profitability.totalRevenue}`;
+                document.getElementById('total-profit').innerText = `₹${insights.profitability.totalProfit}`;
+            }
+
+            // 4. Offer Recommendations
+            const recContainer = document.getElementById('ai-recommendations');
+            if (recContainer && insights.recommendations) {
+                recContainer.innerHTML = '';
+                insights.recommendations.forEach(rec => {
+                    recContainer.innerHTML += `
+                        <div style="background: #fdfce8; border-left: 4px solid #f59e0b; padding: 1rem; border-radius: 4px; margin-bottom: 0.5rem;">
+                            <h4 style="margin: 0; color: #b45309; font-size: 0.95rem;">${rec.productName}</h4>
+                            <p style="margin: 0.2rem 0 0 0; font-size: 0.85rem; color: #78350f;">${rec.suggestion}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            // --- NEW: Demand Prediction Chart ---
+            if (insights.demandPrediction) {
+                this.renderDemandChart(insights.demandPrediction.forecast);
+                this.renderDemandInsights(insights.demandPrediction.insights, insights.demandPrediction.alerts);
+            }
+
+            // --- NEW: Peak Hours Heatmap (Simplified) ---
+            if (insights.peakHours) {
+                this.renderPeakHoursChart(insights.peakHours);
+            }
+
+            // --- NEW: Product Lifecycle ---
+            if (insights.lifecycle) {
+                this.renderLifecycleList(insights.lifecycle);
+            }
+
+        } catch (error) {
+            console.error("Error loading insights", error);
+        }
+    }
+
+    renderDemandChart(forecast) {
+        const ctx = document.getElementById('demandPredictionChart')?.getContext('2d');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: forecast.map(f => f.name),
+                datasets: [
+                    {
+                        label: 'Current Monthly Sales',
+                        data: forecast.map(f => f.current),
+                        borderColor: '#94a3b8',
+                        fill: false
+                    },
+                    {
+                        label: 'Predicted Next Month',
+                        data: forecast.map(f => f.predicted),
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    renderPeakHoursChart(peakHours) {
+        const ctx = document.getElementById('peakHoursChart')?.getContext('2d');
+        if (!ctx) return;
+        const labels = Object.keys(peakHours);
+        const data = Object.values(peakHours);
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Orders per Hour',
+                    data: data,
+                    backgroundColor: data.map(v => v > 5 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(59, 130, 246, 0.5)'),
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    renderLifecycleList(lifecycle) {
+        const container = document.getElementById('product-lifecycle-list');
+        if (!container) return;
+        container.innerHTML = lifecycle.map(l => `
+            <div style="display:flex; justify-content:space-between; padding:0.5rem; border-bottom:1px solid #f1f5f9;">
+                <span style="font-size:0.9rem;">${l.name}</span>
+                <span class="badge ${this.getBadgeClass(l.stage)}">${l.stage}</span>
+            </div>
+        `).join('');
+    }
+
+    renderDemandInsights(insights, alerts) {
+        const container = document.getElementById('demand-insights-list');
+        if (!container) return;
+        let html = alerts.map(a => `<p style="color:#dc2626; font-size:0.85rem; font-weight:600;">⚠️ ${a}</p>`).join('');
+        html += insights.map(i => `<p style="color:#2563eb; font-size:0.85rem;">💡 ${i}</p>`).join('');
+        container.innerHTML = html;
+    }
+
+    getBadgeClass(stage) {
+        if (stage.includes('Maturity')) return 'badge-success';
+        if (stage.includes('Growth')) return 'badge-info';
+        if (stage.includes('Introduction')) return 'badge-warning';
+        return 'badge-secondary';
     }
 
     async loadDailySales() {

@@ -20,4 +20,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> filterProducts(String name, String category, Double minPrice, Double maxPrice, Boolean hasDiscount);
 
     List<Product> findTop5ByOrderBySalesCountDesc();
+    List<Product> findTop5ByQuantityGreaterThanOrderBySalesCountAsc(int quantityThreshold);
 }

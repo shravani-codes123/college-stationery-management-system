@@ -21,4 +21,10 @@ public class User {
     
     private String role; // "STUDENT" or "MANAGER"
     private String resetToken;
+
+    @Column(name = "reward_points")
+    private Integer rewardPoints = 0;
+
+    @Column(name = "loyalty_tier")
+    private String loyaltyTier = "BRONZE"; // BRONZE, SILVER, GOLD
 }

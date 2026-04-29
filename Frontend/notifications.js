@@ -11,6 +11,8 @@ class NotificationSystem {
         this.dropdown = document.getElementById('notif-dropdown');
         this.list = document.getElementById('notif-list');
         this.markReadBtn = document.getElementById('mark-all-read');
+        this.lastCount = 0;
+        this.notifSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); // Professional notification sound
 
         if (this.bell) {
             this.init();
@@ -46,6 +48,13 @@ class NotificationSystem {
         try {
             const response = await fetch(`http://localhost:8080/api/notifications/unread?userId=${this.userId}`);
             const notifications = await response.json();
+            
+            // Play sound if new notifications arrived
+            if (notifications.length > this.lastCount) {
+                this.notifSound.play().catch(e => console.log("Sound play blocked by browser"));
+            }
+            this.lastCount = notifications.length;
+            
             this.updateUI(notifications);
         } catch (error) {
             console.error("Failed to fetch notifications:", error);
@@ -53,12 +62,14 @@ class NotificationSystem {
     }
 
     updateUI(notifications) {
-        // Update Badge
-        if (notifications.length > 0) {
-            this.badge.innerText = notifications.length;
-            this.badge.style.display = 'block';
-        } else {
-            this.badge.style.display = 'none';
+        // Update Badge safely
+        if (this.badge) {
+            if (notifications.length > 0) {
+                this.badge.innerText = notifications.length;
+                this.badge.style.display = 'block';
+            } else {
+                this.badge.style.display = 'none';
+            }
         }
 
         // Update List
@@ -81,7 +92,7 @@ class NotificationSystem {
                 method: 'PUT'
             });
             if (response.ok) {
-                this.badge.style.display = 'none';
+                if (this.badge) this.badge.style.display = 'none';
                 this.list.innerHTML = '<p class="no-notif">No new notifications</p>';
                 this.fetchNotifications(); // Refresh
             }

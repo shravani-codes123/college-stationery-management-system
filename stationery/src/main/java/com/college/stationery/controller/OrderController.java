@@ -75,10 +75,12 @@ public class OrderController {
 
                 // 🔔 Trigger Low Stock Alert
                 if (newQty < 5) {
-                    com.college.stationery.model.Notification alert = new com.college.stationery.model.Notification();
-                    alert.setUserId(1L); // Send to Manager (Assuming ID 1 is manager or broadcast)
-                    alert.setMessage("LOW STOCK ALERT: " + prod.getName() + " only " + newQty + " left!");
-                    notificationRepository.save(alert);
+                    userRepository.findByRole("MANAGER").forEach(manager -> {
+                        com.college.stationery.model.Notification alert = new com.college.stationery.model.Notification();
+                        alert.setUserId(manager.getId());
+                        alert.setMessage("LOW STOCK ALERT: " + prod.getName() + " only " + newQty + " left!");
+                        notificationRepository.save(alert);
+                    });
                 }
             });
         }
@@ -97,10 +99,25 @@ public class OrderController {
         com.college.stationery.model.Order savedOrder = orderService.saveOrder(order);
         
         // 🔔 Notify Manager about new order
-        com.college.stationery.model.Notification adminNotif = new com.college.stationery.model.Notification();
-        adminNotif.setUserId(1L); // Assuming 1 is Manager
-        adminNotif.setMessage("New Order Received! Order ID: #ORD-" + savedOrder.getId());
-        notificationRepository.save(adminNotif);
+        userRepository.findByRole("MANAGER").forEach(manager -> {
+            com.college.stationery.model.Notification adminNotif = new com.college.stationery.model.Notification();
+            adminNotif.setUserId(manager.getId());
+            adminNotif.setMessage("New Order Received! Order ID: #ORD-" + savedOrder.getId());
+            notificationRepository.save(adminNotif);
+        });
+
+        // 🎖️ Update Loyalty Points (1 point for every ₹10)
+        userRepository.findById(order.getUserId()).ifPresent(user -> {
+            int earnedPoints = (int) (order.getTotalPrice() / 10);
+            user.setRewardPoints(user.getRewardPoints() + earnedPoints);
+            
+            // Tier Upgrade Logic
+            if (user.getRewardPoints() > 1000) user.setLoyaltyTier("GOLD");
+            else if (user.getRewardPoints() > 500) user.setLoyaltyTier("SILVER");
+            
+            userRepository.save(user);
+            logger.info("Awarded " + earnedPoints + " points to user " + user.getId());
+        });
 
         // 3. Clear the cart in the same transaction
         cartItemRepository.deleteAll();

@@ -28,13 +28,28 @@
                     <i class="fas fa-shopping-bag"></i> <span>View Orders</span>
                 </div>
                 <div class="menu-item" data-section="print-requests">
-                    <i class="fas fa-print"></i> <span>Print/Xerox Requests</span>
+                    <i class="fas fa-print"></i> <span>Print Requests</span>
                 </div>
                 <div class="menu-item" data-section="stock-alerts">
                     <i class="fas fa-exclamation-triangle"></i> <span>Stock Alerts</span>
                 </div>
+                <div class="menu-item" data-section="offer-engine">
+                    <i class="fas fa-tags"></i> <span>Smart Offer Engine</span>
+                </div>
+                <div class="menu-item" data-section="campus-requests">
+                    <i class="fas fa-university"></i> <span>Campus Requests</span>
+                </div>
+                <div class="menu-item" data-section="combo-management">
+                    <i class="fas fa-layer-group"></i> <span>Value Combo Packs</span>
+                </div>
                 <div class="menu-item" data-section="sales-insights">
                     <i class="fas fa-chart-bar"></i> <span>Sales Insights</span>
+                </div>
+                <div class="menu-item" data-section="customer-feedback">
+                    <i class="fas fa-comments"></i> <span>Customer Feedback</span>
+                </div>
+                <div class="menu-item" data-section="ai-assistant" style="color: var(--primary-color); font-weight: 600;">
+                    <i class="fas fa-robot"></i> <span>AI Assistant</span>
                 </div>
                 <a href="index.html" class="menu-item logout-btn">
                     <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
@@ -186,6 +201,21 @@
                                         <input type="number" id="prod-discount" placeholder="0">
                                     </div>
                                 </div>
+                                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                    <div class="form-group">
+                                        <label>Cost Price (₹)</label>
+                                        <input type="number" id="prod-cost" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Seasonal Tag</label>
+                                        <select id="prod-tag">
+                                            <option value="Regular">Regular</option>
+                                            <option value="Exam Season">Exam Season</option>
+                                            <option value="Semester Start">Semester Start</option>
+                                            <option value="Holiday">Holiday</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label>Product Image</label>
                                     <input type="file" id="prod-image">
@@ -235,7 +265,7 @@
                     </div>
                 </section>
 
-                <!-- Print/Xerox Requests Section -->
+                <!-- Print Requests Section -->
                 <section id="print-requests" class="section">
                     <div class="table-container">
                         <table>
@@ -303,7 +333,43 @@
 
                 <!-- Sales Insights Section -->
                 <section id="sales-insights" class="section">
+                    <!-- AI Insight Cards -->
+                    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #10b981;">
+                            <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Top Performer</h4>
+                            <h3 id="best-seller-name" style="margin-top: 0.5rem; font-size: 1.25rem;">Loading...</h3>
+                            <p id="best-seller-reason" style="font-size: 0.85rem; color: #10b981; margin-top: 0.5rem; font-weight: 500;">...</p>
+                        </div>
+                        <div class="card" id="low-performing-alert" style="padding: 1.5rem; border-top: 4px solid #ef4444; display: none;">
+                            <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; color: #ef4444;"><i class="fas fa-exclamation-circle"></i> Slow-Moving Item</h4>
+                            <h3 id="low-performer-name" style="margin-top: 0.5rem; font-size: 1.25rem;">...</h3>
+                            <p id="low-performer-reason" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">...</p>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #6366f1;">
+                            <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Est. Profit Margin</h4>
+                            <h3 id="profit-margin" style="margin-top: 0.5rem; font-size: 2rem; color: #6366f1;">--%</h3>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #f59e0b;">
+                            <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Total Revenue</h4>
+                            <h3 id="total-revenue" style="margin-top: 0.5rem; font-size: 1.5rem;">₹0</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Overall Earnings</p>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; border-top: 4px solid #10b981;">
+                            <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Total Profit</h4>
+                            <h3 id="total-profit" style="margin-top: 0.5rem; font-size: 1.5rem;">₹0</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Net Gains</p>
+                        </div>
+                    </div>
+
                     <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+                        <!-- Offer Recommendations -->
+                        <div class="card" style="padding: 2rem; grid-column: 1 / -1;">
+                            <h3><i class="fas fa-magic" style="color: #f59e0b;"></i> AI Offer Recommendations</h3>
+                            <div id="ai-recommendations" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                                <!-- Recommendations loaded dynamically -->
+                            </div>
+                        </div>
+
                         <!-- Daily Sales Chart -->
                         <div class="card" style="padding: 2rem;">
                             <h3>Daily Sales Trend</h3>
@@ -321,11 +387,187 @@
                         </div>
                     </div>
                     
-                    <!-- Monthly Sales Chart -->
-                    <div class="card" style="margin-top: 2rem; padding: 2rem;">
-                        <h3>Monthly Sales Performance</h3>
-                        <div class="chart-container" style="position: relative; height:350px; width:100%">
-                            <canvas id="monthlySalesChart"></canvas>
+                        <!-- Monthly Sales Chart -->
+                        <div class="card" style="padding: 2rem;">
+                            <h3>Monthly Sales Performance</h3>
+                            <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                <canvas id="monthlySalesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Peak Buying Hours -->
+                        <div class="card" style="padding: 2rem;">
+                            <h3><i class="fas fa-clock"></i> Peak Buying Hours</h3>
+                            <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                <canvas id="peakHoursChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Smart Demand Prediction -->
+                        <div class="card" style="padding: 2rem; grid-column: 1 / -1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <h3><i class="fas fa-crystal-ball" style="color: #6366f1;"></i> Smart Demand Prediction (Next Month)</h3>
+                                <div id="demand-insights-list" style="text-align: right;"></div>
+                            </div>
+                            <div class="chart-container" style="position: relative; height:350px; width:100%">
+                                <canvas id="demandPredictionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Product Lifecycle -->
+                        <div class="card" style="padding: 2rem;">
+                            <h3><i class="fas fa-seedling"></i> Product Lifecycle Insights</h3>
+                            <div id="product-lifecycle-list" style="margin-top: 1rem; max-height: 300px; overflow-y: auto;">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Smart Offer Engine Section -->
+                <section id="offer-engine" class="section">
+                    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div class="card" style="padding: 2rem;">
+                            <h3><i class="fas fa-bolt" style="color: #f59e0b;"></i> Dynamic Pricing Control</h3>
+                            <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Automatically adjust discounts based on stock and demand rules.</p>
+                            <button class="btn btn-primary" onclick="applyDynamicPricing()" style="margin-top: 1.5rem; width: 100%;">Apply AI Pricing Rules</button>
+                            <div id="pricing-log" style="margin-top: 1rem; font-size: 0.8rem; color: #10b981;"></div>
+                        </div>
+
+                        <div class="card" style="padding: 2rem;">
+                            <h3><i class="fas fa-gift" style="color: #6366f1;"></i> Promo Strategy Generator</h3>
+                            <div id="promo-strategy-list" style="margin-top: 1rem;">
+                                <!-- Strategies loaded dynamically -->
+                                <p class="loading-text">Generating AI strategies...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Value Combo Management Section -->
+                <section id="combo-management" class="section">
+                    <div class="card" style="padding: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <h3><i class="fas fa-layer-group" style="color: var(--primary-color);"></i> Value Combo Management</h3>
+                            <button class="btn btn-primary btn-sm-custom" onclick="openComboModal()"><i class="fas fa-plus"></i> Create New Combo</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Items</th>
+                                        <th>Price (₹)</th>
+                                        <th>Season</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="combo-list-body">
+                                    <!-- Loaded via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Campus Service Requests Section -->
+                <section id="campus-requests" class="section">
+                    <div class="card" style="padding: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <h3><i class="fas fa-university" style="color: var(--primary-color);"></i> Campus Service Requests</h3>
+                            <button class="btn btn-sm-custom" onclick="loadCampusRequests()" style="background: #f1f5f9;"><i class="fas fa-sync"></i> Refresh</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Type</th>
+                                        <th>Details</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="campus-requests-body">
+                                    <!-- Loaded via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Combo Management Modal -->
+                <div id="combo-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Manage Combo Pack</h3>
+                            <span class="close-combo-modal" style="cursor:pointer; font-size:1.5rem;">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="combo-form">
+                                <div class="form-group">
+                                    <label>Combo Name</label>
+                                    <input type="text" id="combo-name" placeholder="e.g. Exam Kit" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Items (Comma Separated)</label>
+                                    <input type="text" id="combo-items" placeholder="Pen, Notebook, Eraser" required>
+                                </div>
+                                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label>Bundle Price (₹)</label>
+                                        <input type="number" id="combo-price" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Season</label>
+                                        <select id="combo-season">
+                                            <option value="REGULAR">Regular</option>
+                                            <option value="EXAM_SEASON">Exam Season</option>
+                                            <option value="SEMESTER_START">Semester Start</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select id="combo-active">
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Save Combo</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Customer Feedback Section -->
+                <section id="customer-feedback" class="section">
+                    <div class="card" style="padding: 2rem;">
+                        <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-comments" style="color: var(--primary-color);"></i> Recent Customer Reviews</h3>
+                        <div id="feedback-list-container" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                            <!-- Feedback cards will be injected here -->
+                            <p class="loading-text">Fetching latest reviews...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="ai-assistant" class="section">
+                    <div id="chatbot-window" style="width: 100%; height: calc(100vh - 120px); background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden;">
+                        <div style="background: var(--primary-color); color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; font-size: 1.25rem;"><i class="fas fa-robot" style="margin-right: 0.5rem;"></i> AI Assistant</h3>
+                        </div>
+                        <div id="chat-messages" style="flex: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: #f8fafc;">
+                            <div style="align-self: flex-start; background: #e2e8f0; padding: 0.8rem 1.2rem; border-radius: 12px; border-bottom-left-radius: 2px; max-width: 80%;">
+                                <strong><i class="fas fa-robot" style="margin-right: 5px; color: var(--primary-color);"></i></strong> Hello! I am your Manager AI Assistant. How can I help you today?
+                            </div>
+                        </div>
+                        <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 1rem; background: white; align-items: center;">
+                            <button id="voice-btn" style="background: #e2e8f0; color: #475569; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;" title="Click to Speak">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <input type="text" id="chat-input" placeholder="Type a message or use the microphone..." style="flex: 1; padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-size: 1rem;" onkeypress="if(event.key === 'Enter') sendMessage()">
+                            <button onclick="sendMessage()" style="background: var(--primary-color); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem;"><i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i> Send</button>
                         </div>
                     </div>
                 </section>
@@ -338,9 +580,13 @@
         </main>
     </div>
 
+
+
     <script src="dashboard.js"></script>
     <script src="notifications.js"></script>
     <script src="analytics.js"></script>
+    <script src="chatbot.js"></script>
+    <script src="offers.js"></script>
     <script>
         // 📊 Manager Dashboard: Full Database Connection Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -458,7 +704,7 @@
                             const statusText = p.quantity < 10 ? 'Low Stock' : 'In Stock';
                             
                             tbody.innerHTML += `
-                                <tr data-id="${p.id}" data-img="${p.imageUrl || 'notebook.jpeg'}">
+                                <tr data-id="${p.id}" data-img="${p.imageUrl || 'notebook.jpeg'}" data-cost="${p.costPrice || 0}" data-tag="${p.seasonalTag || 'Regular'}">
                                     <td>#P-${p.id}</td>
                                     <td>${p.name}</td>
                                     <td>${p.category}</td>
@@ -495,6 +741,9 @@
                         document.getElementById('prod-price').value = row.cells[3].innerText.replace('₹', '');
                         document.getElementById('prod-qty').value = row.cells[4].innerText;
                         document.getElementById('prod-discount').value = row.cells[5].innerText.replace('%', '');
+                        // Fetching additional data from row attributes if available or setting defaults
+                        document.getElementById('prod-cost').value = row.dataset.cost || 0;
+                        document.getElementById('prod-tag').value = row.dataset.tag || 'Regular';
                         modal.style.display = 'block';
                     };
                 });
@@ -528,6 +777,8 @@
                     price: parseFloat(document.getElementById('prod-price').value),
                     quantity: parseInt(document.getElementById('prod-qty').value),
                     discount: parseInt(document.getElementById('prod-discount').value || 0),
+                    costPrice: parseFloat(document.getElementById('prod-cost').value || 0),
+                    seasonalTag: document.getElementById('prod-tag').value,
                     imageUrl: finalImageUrl
                 };
 
@@ -700,12 +951,160 @@
             if(closeModalBtn) closeModalBtn.onclick = () => modal.style.display = 'none';
             window.onclick = (e) => { if (e.target == modal) modal.style.display = 'none'; };
 
+            window.loadCampusRequests = async () => {
+                const tbody = document.getElementById('campus-requests-body');
+                if (!tbody) return;
+                
+                try {
+                    const response = await fetch('http://localhost:8080/api/campus-requests');
+                    const requests = await response.json();
+                    
+                    tbody.innerHTML = requests.map(r => {
+                        const date = new Date(r.requestDate).toLocaleString();
+                        const statusClass = r.status === 'PENDING' ? 'status-pending' : 'status-completed';
+                        return `
+                            <tr>
+                                <td>#REQ-${r.id}</td>
+                                <td><span class="badge ${r.type === 'HOSTEL_DELIVERY' ? 'badge-info' : 'badge-warning'}">${r.type}</span></td>
+                                <td>${r.details}</td>
+                                <td>${date}</td>
+                                <td><span class="status-badge ${statusClass}">${r.status}</span></td>
+                                <td>
+                                    ${r.status === 'PENDING' ? `
+                                        <button class="btn btn-sm-custom" onclick="updateCampusRequestStatus(${r.id}, 'APPROVED')" style="background:#10b981; color:white;"><i class="fas fa-check"></i> Approve</button>
+                                    ` : `
+                                        <span style="color:#64748b; font-size:0.8rem;">Processed</span>
+                                    `}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } catch (e) { console.error("Campus Request Error:", e); }
+            };
+
+            window.updateCampusRequestStatus = async (id, status) => {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/campus-requests/${id}?status=${status}`, { method: 'PUT' });
+                    if (response.ok) {
+                        alert(`Request #${id} marked as ${status}`);
+                        loadCampusRequests();
+                    }
+                } catch (e) { console.error("Update Error:", e); }
+            };
+
+            // --- Combo Management Logic ---
+            const comboModal = document.getElementById('combo-modal');
+            const comboForm = document.getElementById('combo-form');
+            const closeComboBtn = document.querySelector('.close-combo-modal');
+
+            window.loadCombos = async () => {
+                const tbody = document.getElementById('combo-list-body');
+                if (!tbody) return;
+                try {
+                    const res = await fetch('http://localhost:8080/api/combos');
+                    const combos = await res.json();
+                    tbody.innerHTML = combos.map(c => `
+                        <tr>
+                            <td>${c.name}</td>
+                            <td><small>${c.items}</small></td>
+                            <td>₹${c.price}</td>
+                            <td><span class="badge badge-info">${c.season}</span></td>
+                            <td><span class="status-badge ${c.active ? 'status-completed' : 'status-pending'}">${c.active ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                                <button class="btn btn-sm-custom" onclick="deleteCombo(${c.id})" style="background:#ef4444; color:white;"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (e) { console.error(e); }
+            };
+
+            window.openComboModal = () => comboModal.style.display = 'block';
+            if(closeComboBtn) closeComboBtn.onclick = () => comboModal.style.display = 'none';
+
+            comboForm.onsubmit = async (e) => {
+                e.preventDefault();
+                const data = {
+                    name: document.getElementById('combo-name').value,
+                    items: document.getElementById('combo-items').value,
+                    price: parseFloat(document.getElementById('combo-price').value),
+                    season: document.getElementById('combo-season').value,
+                    active: document.getElementById('combo-active').value === 'true'
+                };
+                try {
+                    const res = await fetch('http://localhost:8080/api/combos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    if (res.ok) {
+                        comboModal.style.display = 'none';
+                        comboForm.reset();
+                        loadCombos();
+                    }
+                } catch (e) { console.error(e); }
+            };
+
+            window.deleteCombo = async (id) => {
+                if(!confirm("Delete this combo?")) return;
+                await fetch(`http://localhost:8080/api/combos/${id}`, { method: 'DELETE' });
+                loadCombos();
+            };
+
+            window.loadFeedback = async () => {
+                const container = document.getElementById('feedback-list-container');
+                if (!container) return;
+                try {
+                    const res = await fetch('http://localhost:8080/api/feedback');
+                    const feedbacks = await res.json();
+                    
+                    if (feedbacks.length === 0) {
+                        container.innerHTML = '<p style="color: var(--text-muted);">No feedback received yet.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = feedbacks.map(f => `
+                        <div class="card" style="padding: 1.5rem; border-left: 4px solid var(--primary-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <div>
+                                    <h4 style="font-size: 1rem; color: var(--text-color);">User ID: ${f.userId}</h4>
+                                    <small style="color: var(--text-muted);">Product ID: ${f.productId}</small>
+                                </div>
+                                <div style="color: #f59e0b;">
+                                    ${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)}
+                                </div>
+                            </div>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); font-style: italic; margin-top: 0.5rem;">"${f.comment || 'No comment provided'}"</p>
+                            <div style="margin-top: 1rem; text-align: right;">
+                                <small style="color: var(--text-muted); font-size: 0.75rem;">${new Date(f.createdAt).toLocaleDateString()}</small>
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (e) { 
+                    console.error("Feedback fetch error:", e);
+                    container.innerHTML = '<p style="color: #ef4444;">Error loading feedback.</p>';
+                }
+            };
+
             // Initial Data Load
             window.showInitialAlert = true;
             loadInventory();
             loadOrders();
             loadPrintRequests();
             loadStockAlerts();
+            loadCampusRequests();
+            loadCombos();
+            loadFeedback();
+
+            // 🚪 Logout Logic
+            document.querySelectorAll('.logout-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to logout?")) {
+                        localStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            });
         });
     </script>
 </body>

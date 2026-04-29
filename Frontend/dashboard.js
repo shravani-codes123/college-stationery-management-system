@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
         profileImg.textContent = initials.toUpperCase();
     }
 
+    // 🚪 Logout Logic
+    document.querySelectorAll('.logout-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure you want to logout?")) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        });
+    });
+
     // Section Switching Logic
     menuItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -93,6 +104,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Trigger rating load asynchronously
                     if (window.loadProductRatings) window.loadProductRatings(product.id, ratingId);
                 });
+
+                // 🔔 Dynamic Stock Alerts (For Manager)
+                const stockAlertsList = document.querySelector('#stock-alerts .grid');
+                if (stockAlertsList) {
+                    const lowStockProducts = products.filter(p => p.quantity < 5);
+                    if (lowStockProducts.length > 0) {
+                        stockAlertsList.innerHTML = lowStockProducts.map(prod => `
+                            <div class="card" style="border-left: 5px solid #ef4444; padding: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h4 style="margin-bottom: 0.5rem;">${prod.name}</h4>
+                                        <p style="font-size: 0.875rem; color: var(--text-muted);">Current: ${prod.quantity} | Min Req: 5</p>
+                                        <p style="color: #ef4444; font-weight: 600; margin-top: 0.5rem; font-size: 0.9rem;">Restock Required</p>
+                                    </div>
+                                    <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="document.querySelector('[data-section=\'inventory\']').click()">Restock</button>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        stockAlertsList.innerHTML = '<div class="card" style="padding: 1.5rem; color: #10b981; font-weight: 600;"><i class="fas fa-check-circle"></i> All items are well-stocked!</div>';
+                    }
+                }
             } else {
                 // 👤 FALLBACK STATS (For hardcoded HTML products)
                 if (totalProductsEl) totalProductsEl.textContent = 4;
@@ -627,5 +660,64 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(window.updatePrintQueueStatus, 15000);
     window.updatePrintQueueStatus();
 
+    // --- New: Load Smart Sections ---
+    async function loadTrendingProducts() {
+        const list = document.getElementById('trending-products-list');
+        if (!list) return;
+        try {
+            const res = await fetch('http://localhost:8080/api/products');
+            const products = await res.json();
+            const trending = products.sort((a,b) => b.salesCount - a.salesCount).slice(0, 3);
+            list.innerHTML = trending.map(p => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid #f1f5f9;">
+                    <span style="font-size: 0.9rem;">${p.name}</span>
+                    <span class="badge badge-info" style="font-size: 0.75rem;">${p.salesCount} sold</span>
+                </div>
+            `).join('');
+        } catch(e) {}
+    }
+
+    async function loadSemesterPacks() {
+        const list = document.getElementById('semester-packs-list');
+        if (!list) return;
+        try {
+            const res = await fetch('http://localhost:8080/api/combos');
+            const combos = await res.json();
+            list.innerHTML = combos.slice(0, 2).map(c => `
+                <div style="padding: 0.75rem; background: #f0fdf4; border-radius: 8px; margin-bottom: 0.5rem;">
+                    <h4 style="font-size: 0.9rem; color: #166534;">${c.name}</h4>
+                    <p style="font-size: 0.8rem; color: #15803d; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${c.items}</p>
+                    <button class="btn btn-primary btn-sm-custom" onclick="addComboToCart('${c.name}', ${c.price})" style="margin-top: 0.5rem; width: 100%;">Get for ₹${c.price}</button>
+                </div>
+            `).join('');
+        } catch(e) {}
+    }
+
+    async function updateLoyaltyPoints() {
+        const pointsDisplay = document.getElementById('reward-points-display');
+        const userId = localStorage.getItem('userId') || 1;
+        if (!pointsDisplay) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/api/users/${userId}`);
+            const user = await res.json();
+            pointsDisplay.textContent = user.rewardPoints || 0;
+            
+            // Add a badge for tier
+            const tierBadge = document.createElement('span');
+            tierBadge.className = 'badge';
+            tierBadge.style.cssText = `
+                margin-left: 0.5rem; font-size: 0.7rem; padding: 0.2rem 0.5rem; 
+                background: ${user.loyaltyTier === 'GOLD' ? '#ffd700' : (user.loyaltyTier === 'SILVER' ? '#c0c0c0' : '#cd7f32')};
+                color: white; border-radius: 4px;
+            `;
+            tierBadge.innerText = user.loyaltyTier || 'BRONZE';
+            pointsDisplay.appendChild(tierBadge);
+        } catch(e) { console.error("Loyalty Fetch Error:", e); }
+    }
+
+    updateLoyaltyPoints();
+    loadTrendingProducts();
+    loadSemesterPacks();
     updateCommentBadge(0);
 });

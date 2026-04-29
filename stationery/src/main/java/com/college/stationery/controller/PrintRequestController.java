@@ -33,6 +33,12 @@ public class PrintRequestController {
     @Autowired
     private com.college.stationery.service.FileStorageService fileStorageService;
 
+    @Autowired
+    private com.college.stationery.repository.UserRepository userRepository;
+
+    @Autowired
+    private com.college.stationery.repository.NotificationRepository notificationRepository;
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createRequest(
             @RequestPart("request") PrintRequest request,
@@ -50,6 +56,15 @@ public class PrintRequestController {
             
             PrintRequest saved = repository.save(request);
             System.out.println("Print Request saved successfully: ID " + saved.getId());
+
+            // 🔔 Notify Manager about new print request
+            userRepository.findByRole("MANAGER").forEach(manager -> {
+                com.college.stationery.model.Notification adminNotif = new com.college.stationery.model.Notification();
+                adminNotif.setUserId(manager.getId());
+                adminNotif.setMessage("New Print Request Received! ID: #PRNT-" + saved.getId());
+                notificationRepository.save(adminNotif);
+            });
+
             return ResponseEntity.ok(saved);
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,8 +125,7 @@ public class PrintRequestController {
         return repository.findAll();
     }
 
-    @Autowired
-    private com.college.stationery.repository.NotificationRepository notificationRepository;
+
 
     // Update Print Request Status (For Manager)
     @PutMapping("/{id}")

@@ -21,6 +21,13 @@ public class FeedbackController {
         return repository.save(feedback);
     }
 
+    @GetMapping
+    public List<Feedback> getAllFeedback() {
+        return repository.findAll().stream()
+                .sorted((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()))
+                .toList();
+    }
+
     @GetMapping("/{productId}")
     public List<Feedback> getFeedbackByProduct(@PathVariable Long productId) {
         return repository.findByProductId(productId);

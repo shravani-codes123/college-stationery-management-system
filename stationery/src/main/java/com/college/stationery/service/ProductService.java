@@ -52,6 +52,10 @@ public class ProductService {
             prod.setQuantity(details.getQuantity());
             prod.setDiscount(details.getDiscount());
             prod.setImageUrl(details.getImageUrl());
+            prod.setCostPrice(details.getCostPrice());
+            prod.setSalesCount(details.getSalesCount());
+            prod.setSeasonalTag(details.getSeasonalTag());
+            prod.setMonthlySales(details.getMonthlySales());
             return productRepository.save(prod);
         });
     }
