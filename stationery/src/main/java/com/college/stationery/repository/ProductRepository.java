@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByQuantityLessThan(int threshold);
+    List<Product> findByQuantityLessThan(Integer threshold);
     Optional<Product> findByName(String name);
     
     @Query("SELECT p FROM Product p WHERE " +

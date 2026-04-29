@@ -16,8 +16,8 @@ public class Product {
     private Double price;
     private Integer quantity;
     private Integer discount;
-    private String imageUrl;
     private Integer salesCount = 0;
+<<<<<<< HEAD
     
     @Column(name = "cost_price")
     private Double costPrice;
@@ -33,4 +33,7 @@ public class Product {
 
     @Column(name = "student_discount_eligible")
     private Boolean studentDiscountEligible = true;
+=======
+    private String imageUrl;
+>>>>>>> a8163695820187bd7b5dea38a10fa6a2dca9169a
 }

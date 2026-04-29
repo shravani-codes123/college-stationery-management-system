@@ -1,7 +1,6 @@
 package com.college.stationery.controller;
 
 import com.college.stationery.model.Order;
-import com.college.stationery.repository.OrderRepository;
 import com.college.stationery.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -23,13 +22,13 @@ public class OrderController {
     private static final Logger logger = Logger.getLogger(OrderController.class.getName());
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private com.college.stationery.repository.ProductRepository productRepository;
+    private com.college.stationery.repository.OrderRepository orderRepository;
 
     @Autowired
     private com.college.stationery.repository.CartItemRepository cartItemRepository;
+
+    @Autowired
+    private com.college.stationery.repository.ProductRepository productRepository;
 
     @Autowired
     private com.college.stationery.service.EmailService emailService;
@@ -47,7 +46,6 @@ public class OrderController {
     private com.college.stationery.service.OrderService orderService;
 
     // Place NEW Order (Student Checkout)
-    @PostMapping("/checkout")
     @Transactional
     public ResponseEntity<com.college.stationery.model.Order> placeOrder(@RequestBody com.college.stationery.model.Order order) {
         logger.info("Processing checkout: totalPrice=" + order.getTotalPrice());
@@ -128,7 +126,7 @@ public class OrderController {
 
     // Update Order Status (For Manager)
     @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable("id") Long id, @RequestParam(name = "status") String status) {
         return orderRepository.findById(id).map(order -> {
             String oldStatus = order.getStatus();
             String newStatus = status.toUpperCase();
@@ -198,6 +196,7 @@ public class OrderController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=invoice_ORD_" + id + ".pdf");
+        headers.add("Access-Control-Expose-Headers", "Content-Disposition");
 
         return ResponseEntity.ok()
                 .headers(headers)

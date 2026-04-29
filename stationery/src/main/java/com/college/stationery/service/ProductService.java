@@ -44,8 +44,9 @@ public class ProductService {
     }
 
     public Optional<Product> updateProduct(Long id, Product details) {
-        logger.info("Updating product ID: " + id);
+        logger.info("Updating product ID: " + id + " with details: " + details);
         return productRepository.findById(id).map(prod -> {
+<<<<<<< HEAD
             prod.setName(details.getName());
             prod.setCategory(details.getCategory());
             prod.setPrice(details.getPrice());
@@ -57,7 +58,25 @@ public class ProductService {
             prod.setSeasonalTag(details.getSeasonalTag());
             prod.setMonthlySales(details.getMonthlySales());
             return productRepository.save(prod);
+=======
+            logger.info("Current product found: " + prod.getName());
+            if (details.getName() != null) prod.setName(details.getName());
+            if (details.getCategory() != null) prod.setCategory(details.getCategory());
+            if (details.getPrice() != null) prod.setPrice(details.getPrice());
+            if (details.getQuantity() != null) prod.setQuantity(details.getQuantity());
+            if (details.getDiscount() != null) prod.setDiscount(details.getDiscount());
+            if (details.getImageUrl() != null) prod.setImageUrl(details.getImageUrl());
+            
+            Product updated = productRepository.save(prod);
+            logger.info("Product updated successfully in DB");
+            return updated;
+>>>>>>> a8163695820187bd7b5dea38a10fa6a2dca9169a
         });
+    }
+
+    public List<Product> getLowStockProducts(Integer threshold) {
+        logger.info("Fetching low stock products (threshold: " + threshold + ")");
+        return productRepository.findByQuantityLessThan(threshold);
     }
 
     public void deleteProduct(Long id) {

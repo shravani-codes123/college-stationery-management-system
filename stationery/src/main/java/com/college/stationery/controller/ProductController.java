@@ -48,15 +48,21 @@ public class ProductController {
 
     // Update product (restock, price, etc.)
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product details) {
-        return productService.updateProduct(id, details)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody Product details) {
+        try {
+            return productService.updateProduct(id, details)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error updating product: " + e.getMessage());
+        }
     }
+
 
     // Delete product
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok().build();
     }

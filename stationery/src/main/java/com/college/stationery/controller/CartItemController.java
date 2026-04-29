@@ -39,7 +39,7 @@ public class CartItemController {
 
     // REMOVE Item
     @DeleteMapping("/{id}")
-    public void removeFromCart(@PathVariable Long id) {
+    public void removeFromCart(@PathVariable("id") Long id) {
         cartItemRepository.deleteById(id);
     }
 
